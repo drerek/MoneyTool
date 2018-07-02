@@ -2,6 +2,7 @@ package com.privatecompany.app.MoneyTool.controller;
 
 import com.privatecompany.app.MoneyTool.entity.Command;
 import com.privatecompany.app.MoneyTool.service.LineMatchService;
+import com.privatecompany.app.MoneyTool.service.LiveMatchService;
 import org.apache.http.protocol.HTTP;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -20,8 +21,16 @@ public class HelloController {
     @Autowired
     private LineMatchService lineMatchService;
 
-    @GetMapping("lineMatches/")
-    public ResponseEntity<List<Command>> index(){
+    @Autowired
+    private LiveMatchService liveMatchService;
+
+    @GetMapping("linematches/")
+    public ResponseEntity<List<Command>> getLineMatches(){
             return new ResponseEntity<>(lineMatchService.getCommands(),HttpStatus.OK);
+    }
+
+    @GetMapping("livematches/")
+    public ResponseEntity<List<Command>> getLiveMatches(){
+        return new ResponseEntity<>(liveMatchService.getCommands(),HttpStatus.OK);
     }
 }
