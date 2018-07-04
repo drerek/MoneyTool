@@ -6,7 +6,7 @@
 	<groupId>com.privatecompany.app</groupId>
 	<artifactId>MoneyTool</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<packaging>jar</packaging>
+	<packaging>pom</packaging>
 
 	<name>MoneyTool</name>
 	<description>Demo project for Spring Boot</description>
@@ -33,6 +33,12 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-rest</artifactId>
 		</dependency>
+
+        <dependency>
+            <groupId>javax.mail</groupId>
+            <artifactId>mail</artifactId>
+            <version>1.4</version>
+        </dependency>
 
 		<dependency>
 			<groupId>org.springframework.boot</groupId>

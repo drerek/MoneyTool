@@ -9,4 +9,9 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class Command {
     private String name;
+
+    @Override
+    public String toString() {
+        return name;
+    }
 }
