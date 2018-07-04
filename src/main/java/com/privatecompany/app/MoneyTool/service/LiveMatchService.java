@@ -56,4 +56,31 @@ public class LiveMatchService implements MatchService {
         return commandNames;
     }
 
+    public List<Match> getMatches() {
+        log.debug("Try to get url for driver");
+        driver.get(env.getProperty("flashscore.url"));
+
+        log.debug("Try to click live games");
+        driver.findElement(By.linkText("LIVE Games")).click();
+
+        log.debug("Try to parse driverPage");
+        Document doc = Jsoup.parse(driver.getPageSource());
+
+        log.debug("Try to get names of commands");
+        Elements namesHome = doc.select("span.padr");
+        Elements namesAway = doc.select("span.padl");
+
+        log.debug("Try to get time");
+        Elements time = doc.select("td.cell_ad");
+
+        List<Match> matches = new LinkedList<>();
+        for (int i=0;i<namesAway.size();i++){
+            matches.add(new Match(new Command(namesHome.get(i).text().trim()),
+                    new Command(namesAway.get(i).text().trim()),
+                    time.get(i).text().trim()));
+        }
+
+        return matches;
+    }
+
 }
