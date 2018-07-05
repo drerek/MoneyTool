@@ -24,7 +24,7 @@ public class LiveMatchService implements MatchService {
 
     private final WebDriver driver;
 
-    private static Logger log = LoggerFactory.getLogger(LineMatchService.class);
+    private static Logger log = LoggerFactory.getLogger(LiveMatchService.class);
 
     @Autowired
     public LiveMatchService(Environment env, WebDriver driver) {
