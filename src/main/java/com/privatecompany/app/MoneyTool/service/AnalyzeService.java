@@ -69,13 +69,13 @@ public class AnalyzeService {
         return oneXBetMatches;
     }
 
-    @Scheduled(cron = "*/15 * * * *")
+    @Scheduled(cron = "0 0/15 * * * ?")
     public List<Match> nonConfirmingTimeLineAndLiveMatches(){
         log.debug("Compare live and line");
         List<Match> flashscoreLiveMatches = liveMatchService.getMatches();
         List<Match> oneXBetLineMatches = lineMatchService.getMatches1xbet();
-        log.debug("Total 1x matches:"+oneXBetLineMatches.size());
-        log.debug("Total flashscore matches"+flashscoreLiveMatches.size());
+        log.debug("Total 1x line matches:"+oneXBetLineMatches.size());
+        log.debug("Total flashscore live matches"+flashscoreLiveMatches.size());
         List<Match> comparedMatches = new LinkedList<>();
 
         for (Match oneXBetMatch : oneXBetLineMatches) {
