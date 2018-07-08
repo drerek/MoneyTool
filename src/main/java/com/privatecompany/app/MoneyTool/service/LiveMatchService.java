@@ -2,11 +2,14 @@ package com.privatecompany.app.MoneyTool.service;
 
 import com.privatecompany.app.MoneyTool.entity.Command;
 import com.privatecompany.app.MoneyTool.entity.Match;
+import org.apache.commons.io.FileUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.openqa.selenium.By;
+import org.openqa.selenium.OutputType;
+import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,6 +17,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -59,6 +64,17 @@ public class LiveMatchService implements MatchService {
     public List<Match> getMatches() {
         log.debug("Try to get url for driver");
         driver.get(env.getProperty("flashscore.url"));
+
+        log.debug("Try to get screenshot");
+        File scrFile = ((TakesScreenshot)driver).getScreenshotAs(OutputType.FILE);
+// Now you can do whatever you need to do with it, for example copy somewhere
+
+        try {
+            FileUtils.copyFile(scrFile, new File("C:\\screens\\flashscorelive.png"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
 
         log.debug("Try to click live games");
         driver.findElement(By.linkText("LIVE Games")).click();

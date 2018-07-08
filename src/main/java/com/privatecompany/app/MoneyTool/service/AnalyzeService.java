@@ -32,7 +32,7 @@ public class AnalyzeService {
         this.liveMatchService = liveMatchService;
     }
 
-    @Scheduled(cron = "0 0 9 * * ?")
+    @Scheduled(cron = "0 0 */2 * * ?")
     public List<Match> nonConfirmingTimeLineMatch() {
         log.debug("Compare line and line");
         List<Match> flashscoreMatches = lineMatchService.getMatchesFlashScore();
@@ -40,8 +40,12 @@ public class AnalyzeService {
         List<Match> nonConfirmingMathces = new LinkedList<>();
         List<Match> comparedMatches = new LinkedList<>();
         Set<Match> nonComparedMatches = new HashSet<>();
-        log.debug("Total 1x matches:"+oneXBetMatches.size());
-        log.debug("Total flashscore matches"+flashscoreMatches.size());
+        List<Match> comparableFlashScoreMatch = new LinkedList<>();
+
+        int total1xLine= oneXBetMatches.size();
+        log.debug("Total 1x matches:" + oneXBetMatches.size());
+        int totalFlashScoreLineMatches = flashscoreMatches.size();
+        log.debug("Total flashscore matches" + flashscoreMatches.size());
         for (Match oneXBetMatch : oneXBetMatches) {
             for (Match flashscoreMatch : flashscoreMatches) {
                 if (flashscoreMatch.getHomeCommand().getName().contains(oneXBetMatch.getHomeCommand().getName()) ||
@@ -53,29 +57,39 @@ public class AnalyzeService {
                         oneXBetMatch.getHomeCommand().getName().contains(flashscoreMatch.getAwayCommand().getName()) ||
                         oneXBetMatch.getAwayCommand().getName().contains(flashscoreMatch.getHomeCommand().getName()) ||
                         oneXBetMatch.getAwayCommand().getName().contains(flashscoreMatch.getAwayCommand().getName())) {
-                    log.debug(oneXBetMatch + " was compared");
+                    //log.debug(oneXBetMatch + " was compared");
                     comparedMatches.add(oneXBetMatch);
-                    if (!oneXBetMatch.getStartTime().equals(flashscoreMatch.getStartTime())){
+                    if (!oneXBetMatch.getStartTime().equals(flashscoreMatch.getStartTime())) {
                         nonConfirmingMathces.add(oneXBetMatch);
-                        log.error(oneXBetMatch + "TIME NOT EQUALS");
+                        comparableFlashScoreMatch.add(flashscoreMatch);
+                        log.error(oneXBetMatch + "and" + flashscoreMatch + "TIME NOT EQUALS");
                     }
                 }
             }
         }
         oneXBetMatches.removeAll(comparedMatches);
-
         log.debug("Try to send e-message");
-        mailService.send("Money", String.valueOf(nonConfirmingMathces), "adrerek@gmail.com");
+        mailService.send("Money", "Total 1xbet matches:"+ total1xLine +"\n" +
+                "Total flashscore matches" + totalFlashScoreLineMatches + "\n" +
+                "1xbet match:"+String.valueOf(nonConfirmingMathces)+
+                " flashscore match:"+ String.valueOf(comparableFlashScoreMatch)+"\n", "adrerek@gmail.com");
+        mailService.send("Money", "Total 1xbet matches:"+ total1xLine +"\n" +
+                "Total flashscore matches" + totalFlashScoreLineMatches + "\n" +
+                "1xbet match:"+String.valueOf(nonConfirmingMathces)+
+                " flashscore match:"+ String.valueOf(comparableFlashScoreMatch)+"\n", "artichsa@yandex.ua");
         return oneXBetMatches;
     }
 
-    @Scheduled(cron = "0 0/15 * * * ?")
-    public List<Match> nonConfirmingTimeLineAndLiveMatches(){
+    @Scheduled(cron = "0 5,20,35,50 * * * ?")
+    public List<Match> nonConfirmingTimeLineAndLiveMatches() {
         log.debug("Compare live and line");
         List<Match> flashscoreLiveMatches = liveMatchService.getMatches();
         List<Match> oneXBetLineMatches = lineMatchService.getMatches1xbet();
-        log.debug("Total 1x line matches:"+oneXBetLineMatches.size());
-        log.debug("Total flashscore live matches"+flashscoreLiveMatches.size());
+
+        log.debug("Total 1x line matches:" + oneXBetLineMatches.size());
+
+
+        log.debug("Total flashscore live matches" + flashscoreLiveMatches.size());
         List<Match> comparedMatches = new LinkedList<>();
 
         for (Match oneXBetMatch : oneXBetLineMatches) {
@@ -94,8 +108,11 @@ public class AnalyzeService {
                 }
             }
         }
-        log.debug("Try to send e-message");
-        mailService.send("Live vs line money", "All works: matches" + String.valueOf(comparedMatches), "adrerek@gmail.com");
+        if (!comparedMatches.isEmpty()) {
+            log.debug("Try to send e-message");
+            mailService.send("Live vs line money", "Attention: matches" + String.valueOf(comparedMatches), "adrerek@gmail.com");
+            mailService.send("Live vs line money", "Attention: matches" + String.valueOf(comparedMatches), "artichsa@yandex.ua");
+        }
         return comparedMatches;
     }
 }
