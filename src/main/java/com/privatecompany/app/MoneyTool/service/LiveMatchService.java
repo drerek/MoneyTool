@@ -5,7 +5,6 @@ import com.privatecompany.app.MoneyTool.entity.Match;
 import org.apache.commons.io.FileUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.openqa.selenium.By;
 import org.openqa.selenium.OutputType;

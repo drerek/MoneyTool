@@ -4,25 +4,24 @@ import com.privatecompany.app.MoneyTool.entity.Command;
 import com.privatecompany.app.MoneyTool.entity.Match;
 import org.apache.commons.io.FileUtils;
 import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.openqa.selenium.By;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.chrome.ChromeDriver;
+import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
-import org.jsoup.nodes.Document;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
-import org.slf4j.Logger;
 
 @Service
 @PropertySource("classpath:links.properties")
