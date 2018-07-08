@@ -72,11 +72,11 @@ public class AnalyzeService {
         mailService.send("Money", "Total 1xbet matches:"+ total1xLine +"\n" +
                 "Total flashscore matches" + totalFlashScoreLineMatches + "\n" +
                 "1xbet match:"+String.valueOf(nonConfirmingMathces)+
-                " flashscore match:"+ String.valueOf(comparableFlashScoreMatch)+"\n", "adrerek@gmail.com");
+                " flashscore match:"+ String.valueOf(comparableFlashScoreMatch)+"\n", env.getProperty("email.adress.1"));
         mailService.send("Money", "Total 1xbet matches:"+ total1xLine +"\n" +
                 "Total flashscore matches" + totalFlashScoreLineMatches + "\n" +
                 "1xbet match:"+String.valueOf(nonConfirmingMathces)+
-                " flashscore match:"+ String.valueOf(comparableFlashScoreMatch)+"\n", "artichsa@yandex.ua");
+                " flashscore match:"+ String.valueOf(comparableFlashScoreMatch)+"\n", env.getProperty("email.adress.2"));
         return oneXBetMatches;
     }
 
@@ -110,8 +110,8 @@ public class AnalyzeService {
         }
         if (!comparedMatches.isEmpty()) {
             log.debug("Try to send e-message");
-            mailService.send("Live vs line money", "Attention: matches" + String.valueOf(comparedMatches), "adrerek@gmail.com");
-            mailService.send("Live vs line money", "Attention: matches" + String.valueOf(comparedMatches), "artichsa@yandex.ua");
+            mailService.send("Live vs line money", "Attention: matches" + String.valueOf(comparedMatches), env.getProperty("email.adress.1"));
+            mailService.send("Live vs line money", "Attention: matches" + String.valueOf(comparedMatches), env.getProperty("email.adress.2"));
         }
         return comparedMatches;
     }
