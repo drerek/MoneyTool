@@ -6,10 +6,7 @@ import org.apache.commons.io.FileUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
-import org.openqa.selenium.By;
-import org.openqa.selenium.OutputType;
-import org.openqa.selenium.TakesScreenshot;
-import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,7 +53,6 @@ public class LiveMatchService implements MatchService {
             commandNames.add(new Command(namesHome.get(i).text().trim()));
             commandNames.add(new Command(namesAway.get(i).text().trim()));
         }
-
         return commandNames;
     }
 
@@ -66,7 +62,6 @@ public class LiveMatchService implements MatchService {
 
         log.debug("Try to get screenshot");
         File scrFile = ((TakesScreenshot)driver).getScreenshotAs(OutputType.FILE);
-// Now you can do whatever you need to do with it, for example copy somewhere
 
         try {
             FileUtils.copyFile(scrFile, new File("C:\\screens\\flashscorelive.png"));
@@ -76,7 +71,12 @@ public class LiveMatchService implements MatchService {
 
 
         log.debug("Try to click live games");
-        driver.findElement(By.linkText("LIVE Games")).click();
+        try {
+            driver.findElement(By.linkText("LIVE Games")).click();
+        }
+        catch (NoSuchElementException e){
+            log.error("Cant click to live");
+        }
 
         log.debug("Try to parse driverPage");
         Document doc = Jsoup.parse(driver.getPageSource());
