@@ -35,28 +35,9 @@ public class HelloController {
         return "Greetings from Spring Boot!";
     }
 
-    @RequestMapping("/linecommands")
-    public ResponseEntity<List<Command>> getLineMatches(){
-            return new ResponseEntity<>(lineMatchService.getCommands(),HttpStatus.OK);
-    }
-
-    @GetMapping("/livecommands")
-    public ResponseEntity<List<Command>> getLiveMatches(){
-        return new ResponseEntity<>(liveMatchService.getCommands(),HttpStatus.OK);
-    }
-
-    @GetMapping("/flashscorelinematches")
-    public ResponseEntity<List<Match>> getLineMatchesFlashscore() {
-        return new ResponseEntity<>(lineMatchService.getMatchesFlashScore(),HttpStatus.OK);
-    }
-
-    @GetMapping("/1xlinematches")
-    public ResponseEntity<List<Match>> getLineMatches1x() {
-        return new ResponseEntity<>(lineMatchService.getMatches1xbet(),HttpStatus.OK);
-    }
-
-    @GetMapping("/analyzeLineMatches")
+     @GetMapping("/analyzeLineMatches")
     public ResponseEntity<List<Match>> analyzeMatches() {
-        return new ResponseEntity<>(analyzeService.nonConfirmingTimeLineMatch(),HttpStatus.OK);
+        analyzeService.nonConfirmingTimeLineMatch();
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }

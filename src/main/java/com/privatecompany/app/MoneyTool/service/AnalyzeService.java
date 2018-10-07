@@ -1,6 +1,7 @@
 package com.privatecompany.app.MoneyTool.service;
 
 import com.privatecompany.app.MoneyTool.entity.Match;
+import org.apache.commons.text.similarity.JaroWinklerDistance;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,6 +9,8 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
+import org.apache.commons.text.*;
+
 
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -32,87 +35,57 @@ public class AnalyzeService {
         this.liveMatchService = liveMatchService;
     }
 
-    @Scheduled(cron = "0 0 */2 * * ?")
-    public List<Match> nonConfirmingTimeLineMatch() {
-        log.debug("Compare line and line");
-        List<Match> flashscoreMatches = lineMatchService.getMatchesFlashScore();
-        List<Match> oneXBetMatches = lineMatchService.getMatches1xbet();
-        List<Match> nonConfirmingMathces = new LinkedList<>();
-        List<Match> comparedMatches = new LinkedList<>();
-        Set<Match> nonComparedMatches = new HashSet<>();
-        List<Match> comparableFlashScoreMatch = new LinkedList<>();
-
-        int total1xLine= oneXBetMatches.size();
-        log.debug("Total 1x matches:" + oneXBetMatches.size());
-        int totalFlashScoreLineMatches = flashscoreMatches.size();
-        log.debug("Total flashscore matches" + flashscoreMatches.size());
+    private List<Match> compareMatches(List<Match> oneXBetMatches, List<Match> flashScoreMatches) {
+        List<Match> notConfirmingMatches = new LinkedList<>();
         for (Match oneXBetMatch : oneXBetMatches) {
-            for (Match flashscoreMatch : flashscoreMatches) {
-                if (flashscoreMatch.getHomeCommand().getName().contains(oneXBetMatch.getHomeCommand().getName()) ||
-                        flashscoreMatch.getHomeCommand().getName().contains(oneXBetMatch.getAwayCommand().getName()) ||
-                        flashscoreMatch.getAwayCommand().getName().contains(oneXBetMatch.getHomeCommand().getName()) ||
-                        flashscoreMatch.getAwayCommand().getName().contains(oneXBetMatch.getAwayCommand().getName()) ||
-
-                        oneXBetMatch.getHomeCommand().getName().contains(flashscoreMatch.getHomeCommand().getName()) ||
-                        oneXBetMatch.getHomeCommand().getName().contains(flashscoreMatch.getAwayCommand().getName()) ||
-                        oneXBetMatch.getAwayCommand().getName().contains(flashscoreMatch.getHomeCommand().getName()) ||
-                        oneXBetMatch.getAwayCommand().getName().contains(flashscoreMatch.getAwayCommand().getName())) {
-                    //log.debug(oneXBetMatch + " was compared");
-                    comparedMatches.add(oneXBetMatch);
-                    if (!oneXBetMatch.getStartTime().equals(flashscoreMatch.getStartTime())) {
-                        nonConfirmingMathces.add(oneXBetMatch);
-                        comparableFlashScoreMatch.add(flashscoreMatch);
-                        log.error(oneXBetMatch + "and" + flashscoreMatch + "TIME NOT EQUALS");
+            for (Match flashScoreMatch : flashScoreMatches) {
+                if (oneXBetMatch.compareMatchName(flashScoreMatch)) {
+                    if (!oneXBetMatch.compareMatchTime(flashScoreMatch)) {
+                        notConfirmingMatches.add(oneXBetMatch);
+                        notConfirmingMatches.add(flashScoreMatch);
                     }
                 }
             }
         }
-        oneXBetMatches.removeAll(comparedMatches);
+        return notConfirmingMatches;
+    }
+
+
+    @Scheduled(cron = "0 0 */2 * * ?")
+    public void nonConfirmingTimeLineMatch() {
+        log.debug("Compare line and line");
+        List<Match> oneXBetMatches = lineMatchService.getMatches1xbet();
+        List<Match> flashScoreMatches = lineMatchService.getMatchesFlashScore();
+
+        List<Match> nonConfirmingMatches = compareMatches(oneXBetMatches, flashScoreMatches);
+
+        StringBuilder mail = new StringBuilder("Total 1xbet matches:" + oneXBetMatches.size() + "\n" +
+                "Total flashscore matches:" + flashScoreMatches.size() + "\n");
+        for (int i = 0; i < nonConfirmingMatches.size(); i = i + 2) {
+            mail.append("1xbet:").append(nonConfirmingMatches.get(i)).append("\n").append("flashScore:").append(nonConfirmingMatches.get(i + 1)).append("\n");
+        }
+
         log.debug("Try to send e-message");
-        mailService.send("Money", "Total 1xbet matches:"+ total1xLine +"\n" +
-                "Total flashscore matches" + totalFlashScoreLineMatches + "\n" +
-                "1xbet match:"+String.valueOf(nonConfirmingMathces)+
-                " flashscore match:"+ String.valueOf(comparableFlashScoreMatch)+"\n", env.getProperty("email.adress.1"));
-        mailService.send("Money", "Total 1xbet matches:"+ total1xLine +"\n" +
-                "Total flashscore matches" + totalFlashScoreLineMatches + "\n" +
-                "1xbet match:"+String.valueOf(nonConfirmingMathces)+
-                " flashscore match:"+ String.valueOf(comparableFlashScoreMatch)+"\n", env.getProperty("email.adress.2"));
-        return oneXBetMatches;
+        mailService.send("Line vs line", mail.toString(), env.getProperty("email.adress.1"));
+        mailService.send("Line vs line", mail.toString(), env.getProperty("email.adress.2"));
     }
 
     @Scheduled(cron = "0 5,20,35,50 * * * ?")
-    public List<Match> nonConfirmingTimeLineAndLiveMatches() {
+    public void nonConfirmingTimeLineAndLiveMatches() {
         log.debug("Compare live and line");
         List<Match> flashscoreLiveMatches = liveMatchService.getMatches();
         List<Match> oneXBetLineMatches = lineMatchService.getMatches1xbet();
 
-        log.debug("Total 1x line matches:" + oneXBetLineMatches.size());
+        List<Match> nonConfirmingMatches = compareMatches(oneXBetLineMatches, flashscoreLiveMatches);
 
-
-        log.debug("Total flashscore live matches" + flashscoreLiveMatches.size());
-        List<Match> comparedMatches = new LinkedList<>();
-
-        for (Match oneXBetMatch : oneXBetLineMatches) {
-            for (Match flashscoreMatch : flashscoreLiveMatches) {
-                if (flashscoreMatch.getHomeCommand().getName().contains(oneXBetMatch.getHomeCommand().getName()) ||
-                        flashscoreMatch.getHomeCommand().getName().contains(oneXBetMatch.getAwayCommand().getName()) ||
-                        flashscoreMatch.getAwayCommand().getName().contains(oneXBetMatch.getHomeCommand().getName()) ||
-                        flashscoreMatch.getAwayCommand().getName().contains(oneXBetMatch.getAwayCommand().getName()) ||
-
-                        oneXBetMatch.getHomeCommand().getName().contains(flashscoreMatch.getHomeCommand().getName()) ||
-                        oneXBetMatch.getHomeCommand().getName().contains(flashscoreMatch.getAwayCommand().getName()) ||
-                        oneXBetMatch.getAwayCommand().getName().contains(flashscoreMatch.getHomeCommand().getName()) ||
-                        oneXBetMatch.getAwayCommand().getName().contains(flashscoreMatch.getAwayCommand().getName())) {
-                    log.debug(oneXBetMatch + " was compared");
-                    comparedMatches.add(oneXBetMatch);
-                }
-            }
+        StringBuilder mail = new StringBuilder("Total 1xbet line matches:" + oneXBetLineMatches.size() + "\n" +
+                "Total flashscore live matches:" + flashscoreLiveMatches.size() + "\n");
+        for (int i = 0; i < nonConfirmingMatches.size()-1; i = i + 2) {
+            mail.append("1xbet line:").append(nonConfirmingMatches.get(i)).append("\n").append("flashScore live:").append(nonConfirmingMatches.get(i + 1)).append("\n");
         }
-        if (!comparedMatches.isEmpty()) {
-            log.debug("Try to send e-message");
-            mailService.send("Live vs line money", "Attention: matches" + String.valueOf(comparedMatches), env.getProperty("email.adress.1"));
-            mailService.send("Live vs line money", "Attention: matches" + String.valueOf(comparedMatches), env.getProperty("email.adress.2"));
-        }
-        return comparedMatches;
+
+        log.debug("Try to send e-message");
+        mailService.send("Live vs line", mail.toString(), env.getProperty("email.adress.1"));
+        mailService.send("Live vs line", mail.toString(), env.getProperty("email.adress.2"));
     }
 }
