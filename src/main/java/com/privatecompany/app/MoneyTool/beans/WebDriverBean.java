@@ -19,7 +19,7 @@ public class WebDriverBean {
         chromeOptions.setBinary("C:\\Users\\Tempuser\\AppData\\Local\\Google\\Chrome SxS\\Application\\chrome.exe");
         chromeOptions.addArguments("--headless");
         WebDriver driver = new ChromeDriver(chromeOptions);
-        driver.manage().timeouts().pageLoadTimeout(60, TimeUnit.SECONDS);
+        driver.manage().timeouts().pageLoadTimeout(120, TimeUnit.SECONDS);
         driver.manage().timeouts().setScriptTimeout(30, TimeUnit.SECONDS);
         driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
         return driver;
