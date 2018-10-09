@@ -20,8 +20,15 @@ import org.springframework.stereotype.Service;
 
 import java.io.File;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.Arrays;
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
+
+import static java.time.format.DateTimeFormatter.ISO_LOCAL_DATE;
 
 @Service
 @PropertySource("classpath:links.properties")
@@ -144,6 +151,76 @@ public class LineMatchService implements MatchService {
             j++;
         }
 
+        return matches;
+
+    }
+
+    public List<Match> getMatches1xbetv2(){
+        String urlTemplate="https://1xbetua.com/en/";
+        log.debug("Try to get url for driver");
+        driver.get("https://1xbetua.com/en/betexchange/Football/");
+
+        log.debug("Try to get screenshot");
+        File scrFile = ((TakesScreenshot)driver).getScreenshotAs(OutputType.FILE);
+
+        try {
+            FileUtils.copyFile(scrFile, new File("C:\\screens\\xbetscreen.png"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        log.debug("Try to parse driverPage");
+        Document doc = Jsoup.parse(driver.getPageSource());
+
+        Elements leagues = doc.select("ul.liga_menu");
+        Elements leaguesChild = new Elements();
+        log.debug("Try to get divs for games");
+        for (Element element: leagues){
+            if (element.childNodeSize() != 0) {
+                leaguesChild.addAll(element.children());
+            }
+        }
+        List<String> links = new LinkedList<>();
+        for (Element element: leaguesChild){
+         links.add(element.select("a").attr("href"));
+        }
+
+
+        List<Match> matches = new LinkedList<>();
+        LocalDate localDate = LocalDate.now();
+        log.info("localDate.getDayOfMonth "+localDate.getDayOfMonth());
+        //log.info(localDate.format(ISO_LOCAL_DATE).toString());
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
+        log.info("links count "+links.size());
+        int totalMatches = 0;
+        for (String link: links){
+            log.info(urlTemplate+link);
+            driver.get(urlTemplate+link);
+            Document document = Jsoup.parse(driver.getPageSource());
+            Elements matchesElem = document.select("div.nameCon");
+            totalMatches+=matchesElem.size();
+            log.info("Elements count "+matchesElem.size());
+            for (Element match: matchesElem){
+                String data = match.select("div.date").select("span").text();
+                String date = data.substring(0,data.indexOf(" "));
+                String time = data.substring(data.indexOf(" ")+1,data.length());
+                String commands = match.select("span.n").text();
+                String homeCommand = commands.substring(0,commands.indexOf(" - "));
+                String awayCommand = commands.substring(commands.indexOf(" - ")+3,commands.length());
+
+                //log.info("LocalDate.parse(date,formatter).getDayOfMonth()="+LocalDate.parse(date,formatter).getDayOfMonth());
+                if (localDate.getDayOfMonth()+1 == LocalDate.parse(date,formatter).getDayOfMonth()){
+                    matches.add(new Match(new Command(homeCommand),new Command(awayCommand),time));
+                }
+
+            }
+
+        }
+        log.info("total matches count="+totalMatches);
+        System.out.println("matches count="+matches.size());
+//        for (Match match: matches){
+//            System.out.println(match);
+//        }
         return matches;
 
     }

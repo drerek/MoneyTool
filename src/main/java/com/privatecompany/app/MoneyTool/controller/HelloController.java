@@ -32,7 +32,8 @@ public class HelloController {
 
     @RequestMapping("/")
     public String index() {
-        return "Greetings from Spring Boot!";
+        lineMatchService.getMatches1xbetv2();
+        return "";
     }
 
      @GetMapping("/analyzeLineMatches")
