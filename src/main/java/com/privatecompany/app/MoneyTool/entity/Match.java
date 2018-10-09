@@ -24,11 +24,11 @@ public class Match {
 
     public boolean compareMatchName(Match secondMatch){
 
-        if (distance.apply(this.getHomeCommand().getName(),secondMatch.getHomeCommand().getName())>0.0
-                && distance.apply(this.getAwayCommand().getName(),secondMatch.getAwayCommand().getName())>0.0)
+        if (distance.apply(this.getHomeCommand().getName(),secondMatch.getHomeCommand().getName())>0.8
+                && distance.apply(this.getAwayCommand().getName(),secondMatch.getAwayCommand().getName())>0.6)
             return true;
-        if (distance.apply(this.getHomeCommand().getName(), secondMatch.getAwayCommand().getName())>0.0
-                && distance.apply(this.getAwayCommand().getName(), secondMatch.getHomeCommand().getName())>0.0)
+        if (distance.apply(this.getHomeCommand().getName(), secondMatch.getAwayCommand().getName())>0.8
+                && distance.apply(this.getAwayCommand().getName(), secondMatch.getHomeCommand().getName())>0.6)
             return true;
         return false;
     }
