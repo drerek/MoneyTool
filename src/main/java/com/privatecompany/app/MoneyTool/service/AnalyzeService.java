@@ -54,7 +54,7 @@ public class AnalyzeService {
     @Scheduled(cron = "0 3 */2 * * ?")
     public void nonConfirmingTimeLineMatch() {
         log.debug("Compare line and line");
-        List<Match> oneXBetMatches = lineMatchService.getMatches1xbet();
+        List<Match> oneXBetMatches = lineMatchService.getMatches1xbetv2();
         List<Match> flashScoreMatches = lineMatchService.getMatchesFlashScore();
 
         List<Match> nonConfirmingMatches = compareMatches(oneXBetMatches, flashScoreMatches);
@@ -62,7 +62,7 @@ public class AnalyzeService {
         StringBuilder mail = new StringBuilder("Total 1xbet matches:" + oneXBetMatches.size() + "\n" +
                 "Total flashscore matches:" + flashScoreMatches.size() + "\n");
         if (!nonConfirmingMatches.isEmpty()) {
-            for (int i = 0; i < nonConfirmingMatches.size() - 1; i = i + 2) {
+            for (int i = 0; i < nonConfirmingMatches.size() ; i = i + 2) {
                 mail.append("1xbet:").append(nonConfirmingMatches.get(i)).append("\n").append("flashScore:").append(nonConfirmingMatches.get(i + 1)).append("\n");
             }
         }
@@ -72,17 +72,17 @@ public class AnalyzeService {
         mailService.send("Line vs line", mail.toString(), env.getProperty("email.adress.2"));
     }
 
-    @Scheduled(cron = "0 5,20,35,50 * * * ?")
+    @Scheduled(cron = "0 13,25,35,50 * * * ?")
     public void nonConfirmingTimeLineAndLiveMatches() {
         log.debug("Compare live and line");
         List<Match> flashscoreLiveMatches = liveMatchService.getMatches();
-        List<Match> oneXBetLineMatches = lineMatchService.getMatches1xbet();
+        List<Match> oneXBetLineMatches = lineMatchService.getMatches1xbetv2();
 
         List<Match> nonConfirmingMatches = compareMatches(oneXBetLineMatches, flashscoreLiveMatches);
         if (!nonConfirmingMatches.isEmpty()) {
             StringBuilder mail = new StringBuilder("Total 1xbet line matches:" + oneXBetLineMatches.size() + "\n" +
                     "Total flashscore live matches:" + flashscoreLiveMatches.size() + "\n");
-            for (int i = 0; i < nonConfirmingMatches.size() - 1; i = i + 2) {
+            for (int i = 0; i < nonConfirmingMatches.size(); i = i + 2) {
                 mail.append("1xbet line:").append(nonConfirmingMatches.get(i)).append("\n").append("flashScore live:").append(nonConfirmingMatches.get(i + 1)).append("\n");
             }
 

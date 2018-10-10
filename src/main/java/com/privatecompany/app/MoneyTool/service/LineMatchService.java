@@ -209,7 +209,7 @@ public class LineMatchService implements MatchService {
                 String awayCommand = commands.substring(commands.indexOf(" - ")+3,commands.length());
 
                 //log.info("LocalDate.parse(date,formatter).getDayOfMonth()="+LocalDate.parse(date,formatter).getDayOfMonth());
-                if (localDate.getDayOfMonth()+1 == LocalDate.parse(date,formatter).getDayOfMonth()){
+                if (localDate.getDayOfMonth() == LocalDate.parse(date,formatter).getDayOfMonth()){
                     matches.add(new Match(new Command(homeCommand),new Command(awayCommand),time));
                 }
 
@@ -217,7 +217,7 @@ public class LineMatchService implements MatchService {
 
         }
         log.info("total matches count="+totalMatches);
-        System.out.println("matches count="+matches.size());
+        log.info("matches count="+matches.size());
 //        for (Match match: matches){
 //            System.out.println(match);
 //        }
