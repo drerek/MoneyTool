@@ -74,7 +74,7 @@ public class AnalyzeService {
         mailService.send("Line vs line", mail.toString(), env.getProperty("email.adress.2"));
     }
 
-    @Scheduled(cron = "0 13,25,35,50 * * * ?")
+    @Scheduled(cron = "0 20,35,50 * * * ?")
     public void nonConfirmingTimeLineAndLiveMatches() {
         log.debug("Compare live and line");
         List<Match> flashscoreLiveMatches = liveMatchService.getMatches();

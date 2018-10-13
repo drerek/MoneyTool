@@ -194,12 +194,11 @@ public class LineMatchService implements MatchService {
         log.info("links count "+links.size());
         int totalMatches = 0;
         for (String link: links){
-            log.info(urlTemplate+link);
             driver.get(urlTemplate+link);
             Document document = Jsoup.parse(driver.getPageSource());
             Elements matchesElem = document.select("div.nameCon");
             totalMatches+=matchesElem.size();
-            log.info("Elements count "+matchesElem.size());
+            log.info("link:"+urlTemplate+link+" Elements count "+matchesElem.size());
             for (Element match: matchesElem){
                 String data = match.select("div.date").select("span").text();
                 String date = data.substring(0,data.indexOf(" "));
