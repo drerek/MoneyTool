@@ -16,7 +16,7 @@ public class Match {
     private Command awayCommand;
     private String startTime;
     private final JaroWinklerDistance distance = new JaroWinklerDistance();
-    private static final Pattern pattern = Pattern.compile("^.+\\sU\\d{2}$");
+    private static final Pattern pattern = Pattern.compile("\\sU\\d{2}$");
 
     @Override
     public String toString() {
@@ -39,11 +39,10 @@ public class Match {
         Matcher secondMatcherAway = pattern.matcher(secondAwayCommand);
 
         if (thisMatcherHome.find() && thisMatcherAway.find() && secondMatcherHome.find() && secondMatcherAway.find()) {
-            thisHomeCommand = thisHomeCommand.substring(0, thisHomeCommand.indexOf(thisMatcherHome.start()));
-            thisAwayCommand = thisAwayCommand.substring(0, thisAwayCommand.indexOf(thisMatcherAway.start()));
-            secondHomeCommand = secondHomeCommand.substring(0, secondHomeCommand.indexOf(secondMatcherHome.start()));
-            secondAwayCommand = secondAwayCommand.substring(0, secondAwayCommand.indexOf(secondMatcherAway.start()));
-
+            thisHomeCommand = thisHomeCommand.substring(0, thisMatcherHome.start());
+            thisAwayCommand = thisAwayCommand.substring(0, thisMatcherAway.start());
+            secondHomeCommand = secondHomeCommand.substring(0, secondMatcherHome.start());
+            secondAwayCommand = secondAwayCommand.substring(0, secondMatcherAway.start());
         }
 
         if (distance.apply(thisHomeCommand, secondHomeCommand) > 0.8

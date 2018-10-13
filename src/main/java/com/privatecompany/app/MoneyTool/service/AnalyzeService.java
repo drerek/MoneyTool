@@ -36,6 +36,7 @@ public class AnalyzeService {
     }
 
     private List<Match> compareMatches(List<Match> oneXBetMatches, List<Match> flashScoreMatches) {
+
         List<Match> notConfirmingMatches = new LinkedList<>();
         for (Match oneXBetMatch : oneXBetMatches) {
             for (Match flashScoreMatch : flashScoreMatches) {
@@ -54,8 +55,9 @@ public class AnalyzeService {
     @Scheduled(cron = "0 3 */2 * * ?")
     public void nonConfirmingTimeLineMatch() {
         log.debug("Compare line and line");
-        List<Match> oneXBetMatches = lineMatchService.getMatches1xbetv2();
+
         List<Match> flashScoreMatches = lineMatchService.getMatchesFlashScore();
+        List<Match> oneXBetMatches = lineMatchService.getMatches1xbetv2();
 
         List<Match> nonConfirmingMatches = compareMatches(oneXBetMatches, flashScoreMatches);
 
