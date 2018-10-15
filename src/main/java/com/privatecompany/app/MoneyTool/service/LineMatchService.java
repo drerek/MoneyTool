@@ -57,7 +57,6 @@ public class LineMatchService implements MatchService {
         log.debug("Try to get elements");
         Elements names = doc.select("span.c-events__team");
 
-
         List<Command> commandNames = new LinkedList<>();
         log.debug("Adding commandNames to list");
         for (Element element: names){
@@ -67,7 +66,7 @@ public class LineMatchService implements MatchService {
         return commandNames;
     }
 
-    public List<Match> getMatchesFlashScore(){
+    List<Match> getMatchesFlashScore(){
         log.debug("Try to get url for driver");
         driver.get(env.getProperty("flashscore.url"));
 

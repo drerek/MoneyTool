@@ -56,7 +56,7 @@ public class LiveMatchService implements MatchService {
         return commandNames;
     }
 
-    public List<Match> getMatches() {
+    List<Match> getMatches() {
         log.debug("Try to get url for driver");
         driver.get(env.getProperty("flashscore.url"));
 
