@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import org.apache.commons.text.similarity.JaroWinklerDistance;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -20,6 +21,7 @@ public class Match {
     private String startTime;
     private final JaroWinklerDistance distance = new JaroWinklerDistance();
     private static final Pattern pattern = Pattern.compile("\\sU\\d{2}$");
+    private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
 
     @Override
     public String toString() {
@@ -57,8 +59,8 @@ public class Match {
     }
 
     public boolean compareMatchTime(Match secondMatch) {
-        LocalDate firstMatchTime = LocalDate.parse(this.getStartTime(), ISO_LOCAL_TIME);
-        LocalDate secondMatchTime = LocalDate.parse(secondMatch.getStartTime(), ISO_LOCAL_TIME);
+        LocalDate firstMatchTime = LocalDate.parse(this.getStartTime(), formatter);
+        LocalDate secondMatchTime = LocalDate.parse(secondMatch.getStartTime(), formatter);
         return firstMatchTime.isAfter(secondMatchTime);
     }
 }
