@@ -5,8 +5,11 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.apache.commons.text.similarity.JaroWinklerDistance;
 
+import java.time.LocalDate;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import static java.time.format.DateTimeFormatter.ISO_LOCAL_TIME;
 
 @Data
 @NoArgsConstructor
@@ -54,6 +57,8 @@ public class Match {
     }
 
     public boolean compareMatchTime(Match secondMatch) {
-        return this.getStartTime().equals(secondMatch.getStartTime());
+        LocalDate firstMatchTime = LocalDate.parse(this.getStartTime(), ISO_LOCAL_TIME);
+        LocalDate secondMatchTime = LocalDate.parse(secondMatch.getStartTime(), ISO_LOCAL_TIME);
+        return firstMatchTime.isAfter(secondMatchTime);
     }
 }

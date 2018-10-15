@@ -36,15 +36,12 @@ public class AnalyzeService {
     }
 
     private List<Match> compareMatches(List<Match> oneXBetMatches, List<Match> flashScoreMatches) {
-
         List<Match> notConfirmingMatches = new LinkedList<>();
         for (Match oneXBetMatch : oneXBetMatches) {
             for (Match flashScoreMatch : flashScoreMatches) {
-                if (oneXBetMatch.compareMatchName(flashScoreMatch)) {
-                    if (!oneXBetMatch.compareMatchTime(flashScoreMatch)) {
-                        notConfirmingMatches.add(oneXBetMatch);
-                        notConfirmingMatches.add(flashScoreMatch);
-                    }
+                if (oneXBetMatch.compareMatchName(flashScoreMatch) && !oneXBetMatch.compareMatchTime(flashScoreMatch)) {
+                    notConfirmingMatches.add(oneXBetMatch);
+                    notConfirmingMatches.add(flashScoreMatch);
                 }
             }
         }
@@ -64,7 +61,7 @@ public class AnalyzeService {
         StringBuilder mail = new StringBuilder("Total 1xbet matches:" + oneXBetMatches.size() + "\n" +
                 "Total flashscore matches:" + flashScoreMatches.size() + "\n");
         if (!nonConfirmingMatches.isEmpty()) {
-            for (int i = 0; i < nonConfirmingMatches.size() ; i = i + 2) {
+            for (int i = 0; i < nonConfirmingMatches.size(); i = i + 2) {
                 mail.append("1xbet:").append(nonConfirmingMatches.get(i)).append("\n").append("flashScore:").append(nonConfirmingMatches.get(i + 1)).append("\n");
             }
         }
