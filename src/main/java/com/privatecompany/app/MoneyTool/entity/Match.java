@@ -62,6 +62,6 @@ public class Match {
     public boolean compareMatchTime(Match secondMatch) {
         LocalTime firstMatchTime = LocalTime.parse(this.getStartTime(), formatter);
         LocalTime secondMatchTime = LocalTime.parse(secondMatch.getStartTime(), formatter);
-        return !firstMatchTime.isAfter(secondMatchTime);
+        return firstMatchTime.isAfter(secondMatchTime);
     }
 }

@@ -34,7 +34,7 @@ public class AnalyzeService {
         List<Match> notConfirmingMatches = new LinkedList<>();
         for (Match oneXBetMatch : oneXBetMatches) {
             for (Match flashScoreMatch : flashScoreMatches) {
-                if (oneXBetMatch.compareMatchName(flashScoreMatch) && !oneXBetMatch.compareMatchTime(flashScoreMatch)) {
+                if (oneXBetMatch.compareMatchName(flashScoreMatch) && oneXBetMatch.compareMatchTime(flashScoreMatch)) {
                     notConfirmingMatches.add(oneXBetMatch);
                     notConfirmingMatches.add(flashScoreMatch);
                 }
