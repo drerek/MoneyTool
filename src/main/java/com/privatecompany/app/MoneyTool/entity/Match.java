@@ -23,7 +23,7 @@ public class Match {
 
     @Override
     public String toString() {
-        return  homeCommand +
+        return homeCommand +
                 "-" + awayCommand +
                 " at " + startTime;
     }
@@ -40,25 +40,22 @@ public class Match {
         Matcher secondMatcherHome = pattern.matcher(secondHomeCommand);
         Matcher secondMatcherAway = pattern.matcher(secondAwayCommand);
 
-        String thisLeague = "";
-        String secondLeague = "";
-
         if (thisMatcherHome.find() && thisMatcherAway.find() && secondMatcherHome.find() && secondMatcherAway.find()) {
             thisHomeCommand = thisHomeCommand.substring(0, thisMatcherHome.start());
             thisAwayCommand = thisAwayCommand.substring(0, thisMatcherAway.start());
-            thisLeague = this.getHomeCommand().getName().substring(thisMatcherHome.start()+1, this.getHomeCommand().getName().length());
+            String thisLeague = this.getHomeCommand().getName().substring(thisMatcherHome.start() + 1, this.getHomeCommand().getName().length());
             secondHomeCommand = secondHomeCommand.substring(0, secondMatcherHome.start());
             secondAwayCommand = secondAwayCommand.substring(0, secondMatcherAway.start());
-            secondLeague = secondMatch.getHomeCommand().getName().substring(secondMatcherHome.start()+1, secondMatch.getHomeCommand().getName().length());
+            String secondLeague = secondMatch.getHomeCommand().getName().substring(secondMatcherHome.start() + 1, secondMatch.getHomeCommand().getName().length());
+            if (!thisLeague.equals(secondLeague)) return false;
         }
-        if (thisLeague.equals(secondLeague)) {
-            if (distance.apply(thisHomeCommand, secondHomeCommand) > 0.8
-                    && distance.apply(thisAwayCommand, secondAwayCommand) > 0.6)
-                return true;
-            if (distance.apply(thisHomeCommand, secondAwayCommand) > 0.8
-                    && distance.apply(thisAwayCommand, secondHomeCommand) > 0.6)
-                return true;
-        }
+
+        if (distance.apply(thisHomeCommand, secondHomeCommand) > 0.8
+                && distance.apply(thisAwayCommand, secondAwayCommand) > 0.6)
+            return true;
+        if (distance.apply(thisHomeCommand, secondAwayCommand) > 0.8
+                && distance.apply(thisAwayCommand, secondHomeCommand) > 0.6)
+            return true;
         return false;
     }
 
