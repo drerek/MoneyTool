@@ -53,14 +53,14 @@ public class AnalyzeService {
 
         List<Match> nonConfirmingMatches = compareMatches(oneXBetMatches, flashScoreMatches);
 
-        StringBuilder mail = new StringBuilder("Total 1xbet matches:" + oneXBetMatches.size() + "\n" +
-                "Total flashscore matches:" + flashScoreMatches.size() + "\n");
+        StringBuilder mail = new StringBuilder("Total 1xbet matches:" + oneXBetMatches.size() + "<br>" +
+                "Total flashscore matches:" + flashScoreMatches.size() + "br"+ "<table border=\"1\"><tr><td>1xbet</td><td>flashscore</td></tr>");
         if (!nonConfirmingMatches.isEmpty()) {
             for (int i = 0; i < nonConfirmingMatches.size(); i = i + 2) {
-                mail.append("1xbet:").append(nonConfirmingMatches.get(i)).append("\n").append("flashScore:").append(nonConfirmingMatches.get(i + 1)).append("\n");
+                mail.append("<tr><td>").append(nonConfirmingMatches.get(i)).append("</td>").append("<td>").append(nonConfirmingMatches.get(i + 1)).append("</td></tr>");
             }
         }
-
+        mail.append("</table>");
         log.debug("Try to send e-message");
         mailService.send("Line vs line", mail.toString(), env.getProperty("email.adress.1"));
         mailService.send("Line vs line", mail.toString(), env.getProperty("email.adress.2"));
@@ -74,12 +74,12 @@ public class AnalyzeService {
 
         List<Match> nonConfirmingMatches = compareMatches(oneXBetLineMatches, flashscoreLiveMatches);
         if (!nonConfirmingMatches.isEmpty()) {
-            StringBuilder mail = new StringBuilder("Total 1xbet line matches:" + oneXBetLineMatches.size() + "\n" +
-                    "Total flashscore live matches:" + flashscoreLiveMatches.size() + "\n");
+            StringBuilder mail = new StringBuilder("Total 1xbet line matches:" + oneXBetLineMatches.size() + "<br>" +
+                    "Total flashscore live matches:" + flashscoreLiveMatches.size() + "<br>"+"<table border=\"1\"><tr><td>1xbet line</td><td>flashscore live</td></tr>");
             for (int i = 0; i < nonConfirmingMatches.size(); i = i + 2) {
-                mail.append("1xbet line:").append(nonConfirmingMatches.get(i)).append("\n").append("flashScore live:").append(nonConfirmingMatches.get(i + 1)).append("\n");
+                mail.append("<tr><td>").append(nonConfirmingMatches.get(i)).append("</td>").append("<td>").append(nonConfirmingMatches.get(i + 1)).append("</td></tr>");
             }
-
+            mail.append("</table>");
 
             log.debug("Try to send e-message");
             mailService.send("Live vs line", mail.toString(), env.getProperty("email.adress.1"));

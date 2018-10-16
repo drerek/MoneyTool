@@ -36,7 +36,7 @@ public class MailService {
             //Заголовок письма
             message.setSubject(subject);
             //Содержимое
-            message.setContent(text, "text/html");
+            message.setContent(text, "text/html; charset=utf-8");
 
             //Отправляем сообщение
             Transport.send(message);
