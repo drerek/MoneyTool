@@ -19,7 +19,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 @Service
-public class LiveMatchService implements MatchService {
+public class LiveMatchService {
 
     private final Environment env;
 
@@ -33,32 +33,9 @@ public class LiveMatchService implements MatchService {
         this.driver = driver;
     }
 
-    @Override
-    public List<Command> getCommands() {
+    List<Match> getMatches(String url) {
         log.debug("Try to get url for driver");
-        driver.get(env.getProperty("flashscore.url"));
-
-        log.debug("Try to click live games");
-        driver.findElement(By.linkText("LIVE Games")).click();
-
-        log.debug("Try to parse driverPage");
-        Document doc = Jsoup.parse(driver.getPageSource());
-
-        log.debug("Try to get names of commands");
-        Elements namesHome = doc.select("span.padl");
-        Elements namesAway = doc.select("span.padr");
-
-        List<Command> commandNames = new LinkedList<>();
-        for (int i=0;i<namesAway.size();i++){
-            commandNames.add(new Command(namesHome.get(i).text().trim()));
-            commandNames.add(new Command(namesAway.get(i).text().trim()));
-        }
-        return commandNames;
-    }
-
-    List<Match> getMatches() {
-        log.debug("Try to get url for driver");
-        driver.get(env.getProperty("flashscore.url"));
+        driver.get(url);
 
         log.debug("Try to get screenshot");
         File scrFile = ((TakesScreenshot)driver).getScreenshotAs(OutputType.FILE);

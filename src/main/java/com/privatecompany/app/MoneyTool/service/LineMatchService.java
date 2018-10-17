@@ -32,7 +32,7 @@ import static java.time.format.DateTimeFormatter.ISO_LOCAL_DATE;
 
 @Service
 @PropertySource("classpath:links.properties")
-public class LineMatchService implements MatchService {
+public class LineMatchService {
 
     private final Environment env;
 
@@ -46,29 +46,9 @@ public class LineMatchService implements MatchService {
         this.env = env;
     }
 
-    @Override
-    public List<Command> getCommands() {
+    List<Match> getMatchesFlashScore(String url){
         log.debug("Try to get url for driver");
-        driver.get(env.getProperty("1xbet.url"));
-
-        log.debug("Try to parse driverPage");
-        Document doc = Jsoup.parse(driver.getPageSource());
-
-        log.debug("Try to get elements");
-        Elements names = doc.select("span.c-events__team");
-
-        List<Command> commandNames = new LinkedList<>();
-        log.debug("Adding commandNames to list");
-        for (Element element: names){
-            commandNames.add(new Command(element.text().trim()));
-        }
-
-        return commandNames;
-    }
-
-    List<Match> getMatchesFlashScore(){
-        log.debug("Try to get url for driver");
-        driver.get(env.getProperty("flashscore.url"));
+        driver.get(url);
 
         log.debug("Try to click scheduled games");
         driver.findElement(By.linkText("Scheduled")).click();
@@ -103,61 +83,11 @@ public class LineMatchService implements MatchService {
 
     }
 
-    public List<Match> getMatches1xbet(){
-        log.debug("Try to get url for driver");
-        driver.get(env.getProperty("1xbet.url"));
-
-        log.debug("Try to get screenshot");
-        File scrFile = ((TakesScreenshot)driver).getScreenshotAs(OutputType.FILE);
-
-        try {
-            FileUtils.copyFile(scrFile, new File("C:\\screens\\xbetscreen.png"));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-//        log.debug("Try to click top 100");
-//        driver.findElement(By.linkText("TOP 100"));
-
-        log.debug("Try to parse driverPage");
-        Document doc = Jsoup.parse(driver.getPageSource());
-
-        log.debug("Try to get divs for games");
-        Elements divs = doc.select("div.c-events__item.c-events__item_game");
-        Elements names = new Elements();
-        Elements times = new Elements();
-        for (Element div: divs){
-                Elements spans = div.select("span.c-events__team");
-                if (spans.size()==2) {
-                    names.addAll(spans);
-                    times.add(div.select("div.c-events__time").first());
-                }
-        }
-
-
-        List<Command> commandNames = new LinkedList<>();
-        log.debug("Adding commandNames to list");
-        for (Element element: names){
-            commandNames.add(new Command(element.text().trim()));
-        }
-
-        log.debug("Adding matches to list");
-        int j=0;
-        List<Match> matches = new LinkedList<>();
-        for (int i=0;i<commandNames.size();i=i+2){
-            matches.add(new Match(commandNames.get(i),
-                    commandNames.get(i+1),
-                    times.get(j).text().trim().substring(5).trim()));
-            j++;
-        }
-
-        return matches;
-
-    }
-
-    public List<Match> getMatches1xbetv2(){
+    public List<Match> getMatches1xbetv2(String url){
         String urlTemplate="https://1xbetua.com/en/";
+
         log.debug("Try to get url for driver");
-        driver.get("https://1xbetua.com/en/betexchange/Football/");
+        driver.get(url);
 
         log.debug("Try to get screenshot");
         File scrFile = ((TakesScreenshot)driver).getScreenshotAs(OutputType.FILE);

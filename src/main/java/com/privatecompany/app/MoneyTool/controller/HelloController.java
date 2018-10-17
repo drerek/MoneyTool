@@ -25,15 +25,15 @@ public class HelloController {
         this.analyzeService = analyzeService;
     }
 
-    @RequestMapping("/")
-    public String index() {
-        lineMatchService.getMatches1xbetv2();
-        return "";
-    }
-
-     @GetMapping("/analyzeLineMatches")
+     @GetMapping("/football")
     public ResponseEntity<List<Match>> analyzeMatches() {
         analyzeService.nonConfirmingTimeLineMatch();
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @GetMapping("/hockey")
+    public ResponseEntity<List<Match>> analyzeMatchesHockey() {
+        analyzeService.nonConfirmingTimeLineMatchHockey();
         return new ResponseEntity<>(HttpStatus.OK);
     }
 }

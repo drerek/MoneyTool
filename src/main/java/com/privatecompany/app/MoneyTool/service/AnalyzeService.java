@@ -46,15 +46,15 @@ public class AnalyzeService {
 
     @Scheduled(cron = "0 3 */2 * * ?")
     public void nonConfirmingTimeLineMatch() {
-        log.debug("Compare line and line");
+        log.debug("Compare line and line football");
 
-        List<Match> flashScoreMatches = lineMatchService.getMatchesFlashScore();
-        List<Match> oneXBetMatches = lineMatchService.getMatches1xbetv2();
+        List<Match> flashScoreMatches = lineMatchService.getMatchesFlashScore(env.getProperty("flashscore.url"));
+        List<Match> oneXBetMatches = lineMatchService.getMatches1xbetv2(env.getProperty("1xbetexchane.url"));
 
         List<Match> nonConfirmingMatches = compareMatches(oneXBetMatches, flashScoreMatches);
 
         StringBuilder mail = new StringBuilder("Total 1xbet matches:" + oneXBetMatches.size() + "<br>" +
-                "Total flashscore matches:" + flashScoreMatches.size() + "br"+ "<table border=\"1\"><tr><td>1xbet</td><td>flashscore</td></tr>");
+                "Total flashscore matches:" + flashScoreMatches.size() + "<table border=\"1\"><tr><td>1xbet</td><td>flashscore</td></tr>");
         if (!nonConfirmingMatches.isEmpty()) {
             for (int i = 0; i < nonConfirmingMatches.size(); i = i + 2) {
                 mail.append("<tr><td>").append(nonConfirmingMatches.get(i)).append("</td>").append("<td>").append(nonConfirmingMatches.get(i + 1)).append("</td></tr>");
@@ -62,15 +62,15 @@ public class AnalyzeService {
         }
         mail.append("</table>");
         log.debug("Try to send e-message");
-        mailService.send("Line vs line", mail.toString(), env.getProperty("email.adress.1"));
-        mailService.send("Line vs line", mail.toString(), env.getProperty("email.adress.2"));
+        mailService.send("Line vs line football", mail.toString(), env.getProperty("email.adress.1"));
+        mailService.send("Line vs line football", mail.toString(), env.getProperty("email.adress.2"));
     }
 
-    @Scheduled(cron = "0 20,35,50 * * * ?")
+    @Scheduled(cron = "0 10,30,50 * * * ?")
     public void nonConfirmingTimeLineAndLiveMatches() {
         log.debug("Compare live and line");
-        List<Match> flashscoreLiveMatches = liveMatchService.getMatches();
-        List<Match> oneXBetLineMatches = lineMatchService.getMatches1xbetv2();
+        List<Match> flashscoreLiveMatches = liveMatchService.getMatches(env.getProperty("flashscore.url"));
+        List<Match> oneXBetLineMatches = lineMatchService.getMatches1xbetv2(env.getProperty("1xbetexchane.url"));
 
         List<Match> nonConfirmingMatches = compareMatches(oneXBetLineMatches, flashscoreLiveMatches);
         if (!nonConfirmingMatches.isEmpty()) {
@@ -84,6 +84,49 @@ public class AnalyzeService {
             log.debug("Try to send e-message");
             mailService.send("Live vs line", mail.toString(), env.getProperty("email.adress.1"));
             mailService.send("Live vs line", mail.toString(), env.getProperty("email.adress.2"));
+        }
+    }
+// Hockey
+    @Scheduled(cron = "0 3 1-23/2 * * ?")
+    public void nonConfirmingTimeLineMatchHockey() {
+        log.debug("Compare line and line hockey");
+
+        List<Match> flashScoreMatches = lineMatchService.getMatchesFlashScore(env.getProperty("flashscorehockey.url"));
+        List<Match> oneXBetMatches = lineMatchService.getMatches1xbetv2(env.getProperty("1xbetexchanehockey.url"));
+
+        List<Match> nonConfirmingMatches = compareMatches(oneXBetMatches, flashScoreMatches);
+
+        StringBuilder mail = new StringBuilder("Total 1xbet matches:" + oneXBetMatches.size() + "<br>" +
+                "Total flashscore matches:" + flashScoreMatches.size() + "<table border=\"1\"><tr><td>1xbet</td><td>flashscore</td></tr>");
+        if (!nonConfirmingMatches.isEmpty()) {
+            for (int i = 0; i < nonConfirmingMatches.size(); i = i + 2) {
+                mail.append("<tr><td>").append(nonConfirmingMatches.get(i)).append("</td>").append("<td>").append(nonConfirmingMatches.get(i + 1)).append("</td></tr>");
+            }
+        }
+        mail.append("</table>");
+        log.debug("Try to send e-message");
+        mailService.send("Line vs line hockey", mail.toString(), env.getProperty("email.adress.1"));
+        mailService.send("Line vs line hockey", mail.toString(), env.getProperty("email.adress.2"));
+    }
+
+    @Scheduled(cron = "0 20,40 * * * ?")
+    public void nonConfirmingTimeLineAndLiveMatchesHockey() {
+        log.debug("Compare live and line");
+        List<Match> flashscoreLiveMatches = liveMatchService.getMatches(env.getProperty("flashscorehockey.url"));
+        List<Match> oneXBetLineMatches = lineMatchService.getMatches1xbetv2(env.getProperty("1xbetexchanehockey.url"));
+
+        List<Match> nonConfirmingMatches = compareMatches(oneXBetLineMatches, flashscoreLiveMatches);
+        if (!nonConfirmingMatches.isEmpty()) {
+            StringBuilder mail = new StringBuilder("Total 1xbet line matches:" + oneXBetLineMatches.size() + "<br>" +
+                    "Total flashscore live matches:" + flashscoreLiveMatches.size() + "<br>"+"<table border=\"1\"><tr><td>1xbet line</td><td>flashscore live</td></tr>");
+            for (int i = 0; i < nonConfirmingMatches.size(); i = i + 2) {
+                mail.append("<tr><td>").append(nonConfirmingMatches.get(i)).append("</td>").append("<td>").append(nonConfirmingMatches.get(i + 1)).append("</td></tr>");
+            }
+            mail.append("</table>");
+
+            log.debug("Try to send e-message");
+            mailService.send("Live vs line hockey", mail.toString(), env.getProperty("email.adress.1"));
+            mailService.send("Live vs line hockey", mail.toString(), env.getProperty("email.adress.2"));
         }
     }
 }
