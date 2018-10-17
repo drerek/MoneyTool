@@ -73,7 +73,7 @@ public class LineMatchService {
             namesAway = doc.select("span.padl");
         }
         else if(url.equals(env.getProperty("flashscorehockey.url"))){
-            namesHome = doc.select("td.cell_ab.team-home>span.padr");
+            namesHome = doc.select("td.cell_ab.team-home>span.padl");
             namesAway = doc.select("td.cell_ac.team-away>span.padl");
         }
 
@@ -81,6 +81,7 @@ public class LineMatchService {
         Elements time = doc.select("td.cell_ad");
 
         List<Match> matches = new LinkedList<>();
+        if (namesHome==null)return matches;
         for (int i=0;i<namesAway.size();i++){
             matches.add(new Match(new Command(namesHome.get(i).text().trim()),
                     new Command(namesAway.get(i).text().trim()),
