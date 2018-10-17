@@ -66,8 +66,16 @@ public class LineMatchService {
         Document doc = Jsoup.parse(driver.getPageSource());
 
         log.debug("Try to get names of commands");
-        Elements namesHome = doc.select("span.padr");
-        Elements namesAway = doc.select("span.padl");
+        Elements namesHome = null;
+        Elements namesAway = null;
+        if (url.equals(env.getProperty("flashscore.url"))) {
+            namesHome = doc.select("span.padr");
+            namesAway = doc.select("span.padl");
+        }
+        else if(url.equals(env.getProperty("flashscorehockey.url"))){
+            namesHome = doc.select("td.cell_ab.team-home>span.padr");
+            namesAway = doc.select("td.cell_ac.team-away>span.padl");
+        }
 
         log.debug("Try to get time");
         Elements time = doc.select("td.cell_ad");
