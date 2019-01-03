@@ -116,7 +116,7 @@ public class StatisticService {
     public void collectAllMatches(String url, String fileName) {
         List<String> ids = getAllLinks(url);
         final String template = "https://www.flashscore.com/match/";
-        try (FileWriter writer = new FileWriter(new File("C:\\screens\\" + fileName), true)) {
+        try (FileWriter writer = new FileWriter(new File(fileName), true)) {
             for (String id : ids) {
                 try {
                     sleep(1000);

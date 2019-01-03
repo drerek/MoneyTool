@@ -49,9 +49,12 @@ public class HelloController {
 //        statisticService.analyze("bundes20172018.txt");
 //        statisticService.analyze("laliga.txt");
 //        statisticService.analyze("france.txt");
-       statisticService.collectAllMatches("https://www.flashscore.com/football/europe/uefa-nations-league/results/", "leagueNations.txt");
+       statisticService.collectAllMatches("https://www.live-result.com/football/England/Premier-League/2017-2018/results/", "england.txt");
+       statisticService.collectAllMatches("https://www.live-result.com/football/Spain/Primera-division/2017-2018/results/", "spain.txt");
+       statisticService.collectAllMatches("https://www.live-result.com/football/Germany/Bundesliga-I/2017-2018/results/", "germany.txt");
+       statisticService.collectAllMatches("https://www.live-result.com/football/Italy/Serie-A/2017-2018/results/", "italy.txt");
 
-        statisticService.analyze("leagueNations.txt");
+     //   statisticService.analyze("leagueNations.txt");
        // statisticService.analyze("apl20162018.txt");
         return new ResponseEntity<>(HttpStatus.OK);
     }
