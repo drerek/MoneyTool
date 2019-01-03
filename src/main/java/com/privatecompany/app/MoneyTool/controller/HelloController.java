@@ -1,5 +1,6 @@
 package com.privatecompany.app.MoneyTool.controller;
 
+import com.privatecompany.app.MoneyTool.entity.Command;
 import com.privatecompany.app.MoneyTool.entity.Match;
 import com.privatecompany.app.MoneyTool.service.AnalyzeService;
 import com.privatecompany.app.MoneyTool.service.LineMatchService;
@@ -10,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -60,4 +62,11 @@ public class HelloController {
         statisticService.analyze("russia.txt");
         return new ResponseEntity<>(HttpStatus.OK);
     }
+
+    @GetMapping("/razvod")
+    public ResponseEntity razvod(){
+        statisticService.getAllXls();
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
 }

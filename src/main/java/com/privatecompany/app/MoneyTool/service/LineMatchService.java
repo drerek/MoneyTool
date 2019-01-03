@@ -63,13 +63,14 @@ public class LineMatchService {
         log.debug("Try to get names of commands");
         Elements namesHome = null;
         Elements namesAway = null;
-        if (url.equals(env.getProperty("flashscore.url"))) {
-            namesHome = doc.select("span.padr");
-            namesAway = doc.select("span.padl");
-        }
-        else if(url.equals(env.getProperty("flashscorehockey.url"))){
+
+        if(url.equals(env.getProperty("flashscorehockey.url"))){
             namesHome = doc.select("td.cell_ab.team-home>span.padl");
             namesAway = doc.select("td.cell_ac.team-away>span.padl");
+        }
+        else {
+            namesHome = doc.select("span.padr");
+            namesAway = doc.select("span.padl");
         }
 
         log.debug("Try to get time");
@@ -156,4 +157,7 @@ public class LineMatchService {
         return matches;
 
     }
+
+
+
 }
