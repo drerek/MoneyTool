@@ -44,7 +44,7 @@ public class AnalyzeService {
     }
 
 
-    @Scheduled(cron = "0 3 */2 * * ?")
+//    @Scheduled(cron = "0 3 */2 * * ?")
     public void nonConfirmingTimeLineMatch() {
         log.debug("Compare line and line football");
 
@@ -66,7 +66,7 @@ public class AnalyzeService {
         mailService.send("Line vs line football", mail.toString(), env.getProperty("email.adress.2"));
     }
 
-    @Scheduled(cron = "0 10,30,50 * * * ?")
+//    @Scheduled(cron = "0 10,30,50 * * * ?")
     public void nonConfirmingTimeLineAndLiveMatches() {
         log.debug("Compare live and line");
         List<Match> flashscoreLiveMatches = liveMatchService.getMatches(env.getProperty("flashscore.url"));
@@ -87,7 +87,7 @@ public class AnalyzeService {
         }
     }
 // Hockey
-    @Scheduled(cron = "0 3 1-23/2 * * ?")
+//    @Scheduled(cron = "0 3 1-23/2 * * ?")
     public void nonConfirmingTimeLineMatchHockey() {
         log.debug("Compare line and line hockey");
 
@@ -109,7 +109,7 @@ public class AnalyzeService {
         mailService.send("Line vs line hockey", mail.toString(), env.getProperty("email.adress.2"));
     }
 
-    @Scheduled(cron = "0 20,40 * * * ?")
+//    @Scheduled(cron = "0 20,40 * * * ?")
     public void nonConfirmingTimeLineAndLiveMatchesHockey() {
         log.debug("Compare live and line");
         List<Match> flashscoreLiveMatches = liveMatchService.getMatches(env.getProperty("flashscorehockey.url"));

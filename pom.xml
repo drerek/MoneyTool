@@ -101,6 +101,14 @@
 			<version>1.4</version>
 		</dependency>
 
+		<!-- https://mvnrepository.com/artifact/org.seleniumhq.selenium/selenium-support -->
+		<dependency>
+			<groupId>org.seleniumhq.selenium</groupId>
+			<artifactId>selenium-support</artifactId>
+			<version>3.14.0</version>
+		</dependency>
+
+
 
 
 

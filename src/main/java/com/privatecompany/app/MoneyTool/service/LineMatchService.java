@@ -20,15 +20,10 @@ import org.springframework.stereotype.Service;
 
 import java.io.File;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.Arrays;
-import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
-
-import static java.time.format.DateTimeFormatter.ISO_LOCAL_DATE;
 
 @Service
 @PropertySource("classpath:links.properties")
