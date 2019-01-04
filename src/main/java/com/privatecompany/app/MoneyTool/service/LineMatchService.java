@@ -7,10 +7,7 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
-import org.openqa.selenium.By;
-import org.openqa.selenium.OutputType;
-import org.openqa.selenium.TakesScreenshot;
-import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,7 +43,12 @@ public class LineMatchService {
         driver.get(url);
 
         log.debug("Try to click scheduled games");
-        driver.findElement(By.linkText("Scheduled")).click();
+        try{
+            driver.findElement(By.linkText("Scheduled")).click();
+        }
+        catch (NoSuchElementException e){
+            log.error("No element found");
+        }
 
         log.debug("Try to get screenshot");
         File scrFile = ((TakesScreenshot)driver).getScreenshotAs(OutputType.FILE);
