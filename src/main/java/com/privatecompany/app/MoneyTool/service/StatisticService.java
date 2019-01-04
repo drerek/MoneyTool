@@ -1,5 +1,6 @@
 package com.privatecompany.app.MoneyTool.service;
 
+import com.privatecompany.app.MoneyTool.entity.Command;
 import com.privatecompany.app.MoneyTool.entity.CommandStat;
 import com.privatecompany.app.MoneyTool.entity.Match;
 import org.apache.commons.io.FileUtils;
@@ -261,7 +262,7 @@ public class StatisticService {
                     resultLine.append(name1).append("-").append(name2).append(":").append(start);
             }
         } catch (FileNotFoundException e) {
-            e.printStackTrace();
+            log.error("Error in head2head");
         }
         return resultLine.toString();
     }
@@ -278,8 +279,22 @@ public class StatisticService {
         Row row = sheet.createRow(rowNumber);
 
         row.createCell(0).setCellValue(startTime+" " + command1 + "-" + command2);
-        row.createCell(1).setCellValue(command1StatPrevious.getStartAtHome() + "/" + command1StatPrevious.getMatchesAtHome() +
-                " - " + command2StatPrevious.getStartAway() + "/" + command2StatPrevious.getMatchesAway());
+        if (command1StatPrevious == null && command2StatPrevious != null) {
+            row.createCell(1).setCellValue("X" +
+                    " - " + command2StatPrevious.getStartAway() + "/" + command2StatPrevious.getMatchesAway());
+        }
+        else if (command1StatPrevious != null && command2StatPrevious == null) {
+            row.createCell(1).setCellValue(command1StatPrevious.getStartAway() + "/" + command1StatPrevious.getMatchesAway() +
+                    " - " + "X");
+        }
+        else if (command1StatPrevious == null && command2StatPrevious == null){
+            row.createCell(1).setCellValue("X - X");
+        }
+        else {
+            row.createCell(1).setCellValue(command1StatPrevious.getStartAway() + "/" + command1StatPrevious.getMatchesAway() +
+                    " - " + + command2StatPrevious.getStartAway() + "/" + command2StatPrevious.getMatchesAway());
+        }
+
         row.createCell(2).setCellValue(command1StatCurrent.getStartAtHome() + "/" + command1StatCurrent.getMatchesAtHome() +
                 " - " + command2StatCurrent.getStartAway() + "/" + command2StatCurrent.getMatchesAway());
         row.createCell(3).setCellValue(headToHead);
@@ -311,10 +326,15 @@ public class StatisticService {
 
     @Scheduled(cron = "0 15 10 ? * TUE")
     public void getAllXls(){
-        List<Match> matches = lineMatchService.getMatchesFlashScore(env.getProperty("england.url"));
+        //List<Match> matches = lineMatchService.getMatchesFlashScore(env.getProperty("england.url"));
+        List<Match> matches = new LinkedList<>();
+        matches.add(new Match(new Command("West Ham"),new Command( "Arsenal"), "12.01.19 15:30"));
+        matches.add(new Match(new Command("Burnley"),new Command( "Fulham"), "12.01.19 15:30"));
+        matches.add(new Match(new Command("Crystal Palace"),new Command( "Watford"), "12.01.19 15:30"));
+        matches.add(new Match(new Command("Leicester"),new Command( "Southampton"), "12.01.19 15:30"));
         getXls(env.getProperty("england.prev"), env.getProperty("england.curr"), matches);
 
-        mailService.sendWithFile("England", "", env.getProperty("email.adress.1"), "workbook.xls");
+       /* mailService.sendWithFile("England", "", env.getProperty("email.adress.1"), "workbook.xls");
         mailService.sendWithFile("England","", env.getProperty("email.adress.2"), "workbook.xls");
 
         matches = lineMatchService.getMatchesFlashScore(env.getProperty("italy.url"));
@@ -331,6 +351,7 @@ public class StatisticService {
         getXls(env.getProperty("germany.prev"), env.getProperty("germany.curr"), matches);
         mailService.sendWithFile("Germany", "", env.getProperty("email.adress.1"), "workbook.xls");
         mailService.sendWithFile("Germany","", env.getProperty("email.adress.2"), "workbook.xls");
+        */
     }
 
 
