@@ -101,7 +101,7 @@ Girona;SD Eibar;SD Eibar;
 Athletic Bilbao;Real Sociedad;Athletic Bilbao;
 Celta Vigo;Getafe;Getafe;
 Real Betis;Leganes;Leganes;
-UD Levante;Alaves;;
+UD Levante;Alaves;UD Levante;
 Villareal;Valladolid;Valladolid;
 Huesca;Girona;Girona;
 Real Madrid;Atletico Madrid;Real Madrid;

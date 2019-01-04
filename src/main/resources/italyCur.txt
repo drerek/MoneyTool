@@ -107,7 +107,7 @@ Bologna;Torino;Torino;
 Parma;Lazio;Lazio;
 Frosinone;Empoli;Empoli;
 Udinese;Napoli;Napoli;
-Juventus;Genoa;;
+Juventus;Genoa;Juventus;
 Roma;SPAL 2013;Roma;
 SPAL 2013;Inter;SPAL 2013;
 Napoli;Sassuolo;Napoli;

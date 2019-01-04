@@ -202,7 +202,7 @@ Everton;Swansea City;Swansea City;
 Bournemouth;Liverpool FC;Bournemouth;
 West Bromwich;Manchester United;West Bromwich;
 Manchester City;Tottenham Hotspur;Manchester City;
-Stoke City;West Ham;The kick-off has been delayed.;
+Stoke City;West Ham;Stoke City;
 Arsenal;Newcastle United;Newcastle United;
 Chelsea;Southampton;Chelsea;
 Brighton & Hove Albion;Burnley;Brighton & Hove Albion;
