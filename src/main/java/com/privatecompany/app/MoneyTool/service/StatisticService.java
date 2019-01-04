@@ -43,7 +43,7 @@ public class StatisticService {
 
     private final WebDriver driver;
 
-    private static Logger log = LoggerFactory.getLogger(LineMatchService.class);
+    private static Logger log = LoggerFactory.getLogger(StatisticService.class);
 
     @Autowired
     public StatisticService(WebDriver driver, Environment env, LineMatchService lineMatchService, MailService mailService) {
@@ -326,12 +326,7 @@ public class StatisticService {
 
     @Scheduled(cron = "0 15 10 ? * TUE")
     public void getAllXls(){
-        //List<Match> matches = lineMatchService.getMatchesFlashScore(env.getProperty("england.url"));
-        List<Match> matches = new LinkedList<>();
-        matches.add(new Match(new Command("West Ham"),new Command( "Arsenal"), "12.01.19 15:30"));
-        matches.add(new Match(new Command("Burnley"),new Command( "Fulham"), "12.01.19 15:30"));
-        matches.add(new Match(new Command("Crystal Palace"),new Command( "Watford"), "12.01.19 15:30"));
-        matches.add(new Match(new Command("Leicester"),new Command( "Southampton"), "12.01.19 15:30"));
+        List<Match> matches = lineMatchService.getLiveResultMatches(env.getProperty("england.url"));
         getXls(env.getProperty("england.prev"), env.getProperty("england.curr"), matches);
 
        /* mailService.sendWithFile("England", "", env.getProperty("email.adress.1"), "workbook.xls");

@@ -19,6 +19,7 @@ import java.io.File;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -36,6 +37,28 @@ public class LineMatchService {
     public LineMatchService(WebDriver driver, Environment env){
         this.driver=driver;
         this.env = env;
+    }
+
+    List<Match> getLiveResultMatches(String url){
+        log.debug("Try to get url for driver");
+        driver.get(url);
+
+        log.debug("Try to parse driverPage");
+        Document doc = Jsoup.parse(driver.getPageSource());
+
+        Elements elements = doc.select("a.matches-list-match");
+
+        List<Match> list = new ArrayList<>();
+        for (Element element: elements){
+            String name1= element.select("span.team1>span").text();
+            String name2 = element.select("span.team2>span").text();
+            String date = element.select("span.match-time-date").text();
+            String time = element.select("span.match-time-time").text();
+
+            list.add(new Match(new Command(name1), new Command(name2), date+" "+time));
+        }
+
+        return list;
     }
 
     List<Match> getMatchesFlashScore(String url){
