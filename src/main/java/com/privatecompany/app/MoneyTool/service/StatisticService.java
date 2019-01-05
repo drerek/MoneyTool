@@ -278,23 +278,20 @@ public class StatisticService {
 
         Row row = sheet.createRow(rowNumber);
 
-        row.createCell(0).setCellValue(startTime+" " + command1 + "-" + command2);
+        row.createCell(0).setCellValue(startTime + " " + command1 + "-" + command2);
         if (command1StatPrevious == null && command2StatPrevious != null) {
             row.createCell(1).setCellValue("X" +
                     " - " + command2StatPrevious.getStartAway() + "/" + command2StatPrevious.getMatchesAway());
-        }
-        else if (command1StatPrevious != null && command2StatPrevious == null) {
+        } else if (command1StatPrevious != null && command2StatPrevious == null) {
             row.createCell(1).setCellValue(command1StatPrevious.getStartAway() + "/" + command1StatPrevious.getMatchesAway() +
                     " - " + "X");
-        }
-        else if (command1StatPrevious == null && command2StatPrevious == null){
+        } else if (command1StatPrevious == null && command2StatPrevious == null) {
             row.createCell(1).setCellValue("X - X");
-        }
-        else {
+        } else {
             row.createCell(1).setCellValue(command1StatPrevious.getStartAway() + "/" + command1StatPrevious.getMatchesAway() +
-                    " - " + + command2StatPrevious.getStartAway() + "/" + command2StatPrevious.getMatchesAway());
+                    " - " + +command2StatPrevious.getStartAway() + "/" + command2StatPrevious.getMatchesAway());
         }
-
+        //log.debug("command1=" + command1 + " command2=" + command2);
         row.createCell(2).setCellValue(command1StatCurrent.getStartAtHome() + "/" + command1StatCurrent.getMatchesAtHome() +
                 " - " + command2StatCurrent.getStartAway() + "/" + command2StatCurrent.getMatchesAway());
         row.createCell(3).setCellValue(headToHead);
@@ -325,30 +322,29 @@ public class StatisticService {
 
 
     @Scheduled(cron = "0 15 10 ? * TUE")
-    public void getAllXls(){
-        List<Match> matches = lineMatchService.getLiveResultMatches(env.getProperty("england.url"));
+    public void getAllXls() {
+        List<Match> matches;
+        matches = lineMatchService.getLiveResultMatches(env.getProperty("england.url")).subList(0,20);
         getXls(env.getProperty("england.prev"), env.getProperty("england.curr"), matches);
+        mailService.sendWithFile("England", "", env.getProperty("email.adress.1"), "workbook.xls");
+        mailService.sendWithFile("England", "", env.getProperty("email.adress.2"), "workbook.xls");
 
-       /* mailService.sendWithFile("England", "", env.getProperty("email.adress.1"), "workbook.xls");
-        mailService.sendWithFile("England","", env.getProperty("email.adress.2"), "workbook.xls");
-
-        matches = lineMatchService.getMatchesFlashScore(env.getProperty("italy.url"));
+        matches = lineMatchService.getLiveResultMatches(env.getProperty("italy.url")).subList(0,20);
         getXls(env.getProperty("italy.prev"), env.getProperty("italy.curr"), matches);
         mailService.sendWithFile("Italy", "", env.getProperty("email.adress.1"), "workbook.xls");
-        mailService.sendWithFile("Italy","", env.getProperty("email.adress.2"), "workbook.xls");
+        mailService.sendWithFile("Italy", "", env.getProperty("email.adress.2"), "workbook.xls");
 
-        matches = lineMatchService.getMatchesFlashScore(env.getProperty("spain.url"));
+        matches = lineMatchService.getLiveResultMatches(env.getProperty("spain.url")).subList(0,16);
         getXls(env.getProperty("spain.prev"), env.getProperty("spain.curr"), matches);
         mailService.sendWithFile("Spain", "", env.getProperty("email.adress.1"), "workbook.xls");
-        mailService.sendWithFile("Spain","", env.getProperty("email.adress.2"), "workbook.xls");
+        mailService.sendWithFile("Spain", "", env.getProperty("email.adress.2"), "workbook.xls");
 
-        matches = lineMatchService.getMatchesFlashScore(env.getProperty("germany.url"));
+        matches = lineMatchService.getLiveResultMatches(env.getProperty("germany.url")).subList(0,18);
         getXls(env.getProperty("germany.prev"), env.getProperty("germany.curr"), matches);
         mailService.sendWithFile("Germany", "", env.getProperty("email.adress.1"), "workbook.xls");
-        mailService.sendWithFile("Germany","", env.getProperty("email.adress.2"), "workbook.xls");
-        */
-    }
+        mailService.sendWithFile("Germany", "", env.getProperty("email.adress.2"), "workbook.xls");
 
+    }
 
 
 }
