@@ -5,17 +5,26 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.PropertySource;
+import org.springframework.core.env.Environment;
 
+import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 @Configuration
+@PropertySource("classpath:links.properties")
 public class WebDriverBean {
+    private final Environment env;
+
+    public WebDriverBean(Environment env) {
+        this.env = env;
+    }
 
     @Bean
     public WebDriver getWebDriver(){
-        System.setProperty("webdriver.chrome.driver", "C:\\chromedriver\\chromedriver.exe");
+        System.setProperty("webdriver.chrome.driver", Objects.requireNonNull(env.getProperty("path.chromedriver")));
         ChromeOptions chromeOptions = new ChromeOptions();
-        chromeOptions.setBinary("C:\\Users\\Tempuser\\AppData\\Local\\Google\\Chrome SxS\\Application\\chrome.exe");
+        chromeOptions.setBinary(Objects.requireNonNull(env.getProperty("path.chrome")));
         chromeOptions.addArguments("--headless");
         WebDriver driver = new ChromeDriver(chromeOptions);
         driver.manage().timeouts().pageLoadTimeout(120, TimeUnit.SECONDS);

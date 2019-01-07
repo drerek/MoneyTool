@@ -44,27 +44,24 @@ public class HelloController {
 
     @GetMapping("/stat")
     public ResponseEntity stat(){
-
-//        statisticService.analyze("russia.txt");
-//        statisticService.analyze("bundes20172018.txt");
-//        statisticService.analyze("laliga.txt");
-//        statisticService.analyze("france.txt");
-       statisticService.collectAllMatchesLiveResult("https://www.live-result.com/football/England/Premier-League/2017-2018/results/", "england.txt");
+               statisticService.collectAllMatchesLiveResult("https://www.live-result.com/football/England/Premier-League/2017-2018/results/", "england.txt");
        statisticService.collectAllMatchesLiveResult("https://www.live-result.com/football/Spain/Primera-division/2017-2018/results/", "spain.txt");
        statisticService.collectAllMatchesLiveResult("https://www.live-result.com/football/Germany/Bundesliga-I/2017-2018/results/", "germany.txt");
        statisticService.collectAllMatchesLiveResult("https://www.live-result.com/football/Italy/Serie-A/2017-2018/results/", "italy.txt");
 
-     //   statisticService.analyze("leagueNations.txt");
-       // statisticService.analyze("apl20162018.txt");
+        statisticService.analyze("england.txt.txt");
+        statisticService.analyze("spain.txt");
+        statisticService.analyze("germany.txt");
+        statisticService.analyze("italy.txt");
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @GetMapping("/statlivereult")
-    public ResponseEntity statLiveResult(){
-        statisticService.collectAllMatchesLiveResult("https://www.liveresult.ru/football/Russia/Premier-League/2017-2018/results/", "russia.txt");
-        statisticService.analyze("russia.txt");
-        return new ResponseEntity<>(HttpStatus.OK);
-    }
+//    @GetMapping("/statlivereult")
+//    public ResponseEntity statLiveResult(){
+//        statisticService.collectAllMatchesLiveResult("https://www.liveresult.ru/football/Russia/Premier-League/2017-2018/results/", "russia.txt");
+//        statisticService.analyze("russia.txt");
+//        return new ResponseEntity<>(HttpStatus.OK);
+//    }
 
     @GetMapping("/razvod")
     public ResponseEntity razvod(){

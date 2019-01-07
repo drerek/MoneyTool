@@ -321,7 +321,7 @@ public class StatisticService {
     }
 
 
-    @Scheduled(cron = "0 15 10 ? * TUE")
+    @Scheduled(cron = "0 10 10 ? * TUE")
     public void getAllXls() {
         List<Match> matches;
         matches = lineMatchService.getLiveResultMatches(env.getProperty("england.url")).subList(0,20);
