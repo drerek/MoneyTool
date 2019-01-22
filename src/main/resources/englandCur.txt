@@ -1,3 +1,13 @@
+Fulham;Tottenham Hotspur;Fulham;
+Huddersfield Town;Manchester City;Huddersfield Town;
+Arsenal;Chelsea;Arsenal;
+Newcastle United;Cardiff City;Newcastle United;
+Bournemouth;West Ham;Bournemouth;
+Manchester United;Brighton & Hove Albion;Manchester United;
+Southampton;Everton;Southampton;
+Liverpool FC;Crystal Palace;Liverpool FC;
+Watford;Burnley;Watford;
+Wolverhampton;Leicester;Wolverhampton;
 Manchester City;Wolverhampton;Wolverhampton;
 Tottenham Hotspur;Manchester United;Tottenham Hotspur;
 Everton;Bournemouth;Bournemouth;
