@@ -1,3 +1,12 @@
+Hoffenheim;Bayern Munich;Hoffenheim;
+FC Augsburg;Fortuna Dusseldorf;Fortuna Dusseldorf;
+Bayer Leverkusen;Borussia Monchengladbach;Borussia Monchengladbach;
+Eintracht Frankfurt;Freiburg;Eintracht Frankfurt;
+Hannover 96;Werder Bremen;Werder Bremen;
+Stuttgart;Mainz 05;Stuttgart;
+RB Leipzig;Borussia Dortmund;Borussia Dortmund;
+FC Nürnberg;Hertha Berlin;FC Nürnberg;
+Schalke 04;Wolfsburg;Wolfsburg;
 Hoffenheim;Mainz 05;Hoffenheim;
 FC Augsburg;Wolfsburg;FC Augsburg;
 Eintracht Frankfurt;Bayern Munich;Bayern Munich;
