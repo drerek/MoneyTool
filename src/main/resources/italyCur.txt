@@ -1,3 +1,13 @@
+Sassuolo;Cagliari;Cagliari;
+Sampdoria;Udinese;Udinese;
+AC Milan;Napoli;AC Milan;
+Chievo Verona;Fiorentina;Fiorentina;
+Atalanta;Roma;Atalanta;
+Parma;SPAL 2013;Parma;
+Bologna;Frosinone;Bologna;
+Torino;Inter;Torino;
+Lazio;Juventus;Lazio;
+Empoli;Genoa;Empoli;
 Roma;Torino;Torino;
 Udinese;Parma;Udinese;
 Inter;Sassuolo;Sassuolo;
