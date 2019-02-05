@@ -1,3 +1,13 @@
+Huesca;Valladolid;Valladolid;
+UD Levante;Getafe;Getafe;
+Real Sociedad;Athletic Bilbao;Real Sociedad;
+Barcelona;Valencia;Valencia;
+Celta Vigo;Sevilla;Celta Vigo;
+Villareal;Espanyol;Villareal;
+Real Betis;Atletico Madrid;Real Betis;
+SD Eibar;Girona;Girona;
+Real Madrid;Alaves;Real Madrid;
+Rayo Vallecano;Leganes;Leganes;
 Sevilla;UD Levante;Sevilla;
 Atletico Madrid;Getafe;Atletico Madrid;
 Leganes;SD Eibar;Leganes;
