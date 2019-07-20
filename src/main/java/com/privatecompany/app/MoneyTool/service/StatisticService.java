@@ -64,7 +64,7 @@ public class StatisticService {
         }
     }
 
-    public List<String> getAllLinks(String url) {
+    private List<String> getAllLinks(String url) {
         driver.get(url);
         log.info("Try to open full page");
         while (isClickable(By.linkText("Show more matches"), driver)) {
@@ -98,7 +98,7 @@ public class StatisticService {
         return ids;
     }
 
-    public List<String> getAllLinksLiveResult(String url) {
+    private List<String> getAllLinksLiveResult(String url) {
         driver.get(url);
 
         log.debug("Try to parse driverPage");
@@ -247,7 +247,7 @@ public class StatisticService {
         return stat;
     }
 
-    public String headToHead(String fileName, String command1, String command2) {
+    private String headToHead(String fileName, String command1, String command2) {
         StringBuilder resultLine = new StringBuilder();
         try {
             Scanner scanner = new Scanner(new File(fileName)).useDelimiter(";");
@@ -267,12 +267,12 @@ public class StatisticService {
         return resultLine.toString();
     }
 
-    public void getStatToXls(Map statPrev, Map statCurrent, String fileCurrent, Sheet sheet, String command1, String command2, int rowNumber, String startTime) {
+    private void getStatToXls(Map statPrev, Map statCurrent, String fileCurrent, Sheet sheet, String command1, String command2, int rowNumber, String startTime) {
         CommandStat command1StatPrevious = (CommandStat) statPrev.get(command1);
         CommandStat command2StatPrevious = (CommandStat) statPrev.get(command2);
         CommandStat command1StatCurrent = (CommandStat) statCurrent.get(command1);
         CommandStat command2StatCurrent = (CommandStat) statCurrent.get(command2);
-
+        log.debug("Command1="+command1+ " command2="+command2);
         String headToHead = headToHead(fileCurrent, command1, command2);
 
 
@@ -298,7 +298,7 @@ public class StatisticService {
 
     }
 
-    public void getXls(String filePrevious, String fileCurrent, List<Match> matchList) {
+    private void getXls(String filePrevious, String fileCurrent, List<Match> matchList) {
         Map statPrev = analyze(filePrevious);
         Map statCurr = analyze(fileCurrent);
 
@@ -321,28 +321,28 @@ public class StatisticService {
     }
 
 
-    @Scheduled(cron = "0 10 10 ? * TUE")
+//    @Scheduled(cron = "0 10 10 ? * TUE")
     public void getAllXls() {
         List<Match> matches;
-        matches = lineMatchService.getLiveResultMatches(env.getProperty("england.url")).subList(0,20);
-        getXls(env.getProperty("england.prev"), env.getProperty("england.curr"), matches);
-        mailService.sendWithFile("England", "", env.getProperty("email.adress.1"), "workbook.xls");
-        mailService.sendWithFile("England", "", env.getProperty("email.adress.2"), "workbook.xls");
-
-        matches = lineMatchService.getLiveResultMatches(env.getProperty("italy.url")).subList(0,20);
-        getXls(env.getProperty("italy.prev"), env.getProperty("italy.curr"), matches);
-        mailService.sendWithFile("Italy", "", env.getProperty("email.adress.1"), "workbook.xls");
-        mailService.sendWithFile("Italy", "", env.getProperty("email.adress.2"), "workbook.xls");
-
-        matches = lineMatchService.getLiveResultMatches(env.getProperty("spain.url")).subList(0,16);
-        getXls(env.getProperty("spain.prev"), env.getProperty("spain.curr"), matches);
-        mailService.sendWithFile("Spain", "", env.getProperty("email.adress.1"), "workbook.xls");
-        mailService.sendWithFile("Spain", "", env.getProperty("email.adress.2"), "workbook.xls");
+//        matches = lineMatchService.getLiveResultMatches(env.getProperty("england.url")).subList(0,20);
+//        getXls(env.getProperty("england.prev"), env.getProperty("england.curr"), matches);
+//        mailService.sendWithFile("England", "", env.getProperty("email.adress.1"), "workbook.xls");
+//        mailService.sendWithFile("England", "", env.getProperty("email.adress.2"), "workbook.xls");
+//
+//        matches = lineMatchService.getLiveResultMatches(env.getProperty("italy.url")).subList(0,20);
+//        getXls(env.getProperty("italy.prev"), env.getProperty("italy.curr"), matches);
+//        mailService.sendWithFile("Italy", "", env.getProperty("email.adress.1"), "workbook.xls");
+//        mailService.sendWithFile("Italy", "", env.getProperty("email.adress.2"), "workbook.xls");
+//
+//        matches = lineMatchService.getLiveResultMatches(env.getProperty("spain.url")).subList(0,16);
+//        getXls(env.getProperty("spain.prev"), env.getProperty("spain.curr"), matches);
+//        mailService.sendWithFile("Spain", "", env.getProperty("email.adress.1"), "workbook.xls");
+//        mailService.sendWithFile("Spain", "", env.getProperty("email.adress.2"), "workbook.xls");
 
         matches = lineMatchService.getLiveResultMatches(env.getProperty("germany.url")).subList(0,18);
         getXls(env.getProperty("germany.prev"), env.getProperty("germany.curr"), matches);
         mailService.sendWithFile("Germany", "", env.getProperty("email.adress.1"), "workbook.xls");
-        mailService.sendWithFile("Germany", "", env.getProperty("email.adress.2"), "workbook.xls");
+//        mailService.sendWithFile("Germany", "", env.getProperty("email.adress.2"), "workbook.xls");
 
     }
 

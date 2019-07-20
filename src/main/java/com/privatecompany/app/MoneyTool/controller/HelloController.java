@@ -69,4 +69,16 @@ public class HelloController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
+    @GetMapping("/parimatch")
+    public ResponseEntity parimatch(){
+        lineMatchService.getMatchesPariMatch("https://www.parimatch.com/en/sport/futbol/");
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @GetMapping("/flashscore/line")
+    public ResponseEntity flashscoreLine(){
+        List matches = lineMatchService.getMatchesFlashScore("https://www.flashscore.com/");
+        System.out.println(matches);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 }
