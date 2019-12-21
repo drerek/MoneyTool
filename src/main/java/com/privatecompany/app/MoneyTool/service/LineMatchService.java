@@ -8,6 +8,9 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.openqa.selenium.*;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.Wait;
+import org.openqa.selenium.support.ui.WebDriverWait;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -102,6 +105,12 @@ public class LineMatchService {
 
         List<Match> matches = new LinkedList<>();
         if (namesHome == null) return matches;
+		if (namesAway.size() != namesHome.size() || namesAway.size() != time.size()){
+			matches.add(new Match(new Command("time not correlated"),
+			new Command("time not correlated"), ""));
+			return matches;
+			} 
+			
         for (int i = 0; i < namesAway.size(); i++) {
             String oneTime = time.get(i).text().trim();
             if (oneTime.contains("FRO")){
@@ -184,10 +193,29 @@ public class LineMatchService {
 
     }
 
-    public List<Match> getMatchesPariMatch(String url) {
-        String urlTemplate = "https://www.parimatch.com";
+    public List<Match> getMatchesPariMatch(String url, String tag) {
+        String urlTemplate = "https://www.parimatch.com/en/";
         log.debug("Try to get url for driver");
-        driver.get(url);
+        driver.get(urlTemplate);
+
+        if (tag.equals("Football")) {
+            log.debug("Try to click on Football button");
+            WebElement checkbox = driver.findElement(By.linkText("Football"));
+            checkbox.findElement(By.cssSelector("em")).click();
+        }
+        else if(tag.equals("Hockey")) {
+            log.debug("Try to click on Hockey button");
+            WebElement checkbox = driver.findElement(By.linkText("Ice Hockey"));
+            checkbox.findElement(By.cssSelector("em")).click();
+        }
+        else {
+            log.error("Tag is not of all ifs");
+            return null;
+        }
+
+        // Click on show button
+        log.debug("Try to click on show button");
+        driver.findElement(By.id("buttons")).findElements(By.cssSelector("button")).get(1).click();
 
         log.debug("Try to get screenshot");
         File scrFile = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);
@@ -198,60 +226,68 @@ public class LineMatchService {
             e.printStackTrace();
         }
 
-        log.debug("Try to parse driverPage");
-        Document doc = Jsoup.parse(driver.getPageSource());
+        final Wait<WebDriver> wait = new WebDriverWait(driver, 20, 1000);
+        wait.until(ExpectedConditions.visibilityOf(driver.findElement(By.cssSelector("tbody.row1.processed"))));
 
-        Elements leagues = doc.select("ul#sports");
-        Elements leaguesChild = new Elements();
-
-        log.debug("Try to get divs for games");
-        for (Element element : leagues) {
-            if (element.childNodeSize() != 0) {
-                leaguesChild.addAll(element.children());
-            }
+        log.debug("Try to get PageSource");
+        String pageSource;
+        try{
+            pageSource = driver.getPageSource();
         }
-        List<String> links = new LinkedList<>();
-        for (Element element : leaguesChild) {
-            links.add(element.select("a").attr("href"));
+        catch (Exception e){
+            log.error("Exception:"+e.getMessage());
+//            driver.close();
+            return null;
         }
 
+        Document doc = Jsoup.parse(pageSource);
+        Elements leagues = doc.select("tbody.row1.processed");
+        leagues.addAll(doc.select("tbody.row2.processed"));
+
+        log.debug("leagues=" + leagues);
 
         List<Match> matches = new LinkedList<>();
         LocalDate localDate = LocalDate.now();
         log.info("localDate.getDayOfMonth " + localDate.getDayOfMonth());
         //log.info(localDate.format(ISO_LOCAL_DATE).toString());
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM");
-        log.info("links count " + links.size());
+        log.info("links count " + leagues.size());
         int totalMatches = 0;
-        for (String link : links) {
-            driver.get(urlTemplate + link);
-            Document document = Jsoup.parse(driver.getPageSource());
-            Elements matchesElemRow1 = document.select("tbody.row1 processed");
-            Elements matchesElemRow2 = document.select("tbody.row2 processed");
-            Elements matchesElem = new Elements();
-            matchesElem.addAll(matchesElemRow1);
-            matchesElem.addAll(matchesElemRow2);
-
-            totalMatches += matchesElem.size();
-            log.info("link:" + urlTemplate + link + " Elements count " + matchesElem.size());
-            for (Element match : matchesElem) {
+        for (Element match : leagues) {
+            log.debug("League=" + match.text());
+            try {
                 Elements tds = match.select("td");
-                String data = tds.get(2).text();
-                log.info("data= " + data);
-                String date = data.substring(0, data.indexOf(" "));
-                String time = data.substring(data.indexOf(" ") + 1);
-                String commands = tds.get(3).select("a.om").text();
-                String homeCommand = commands.substring(0, commands.indexOf(" "));
-                String awayCommand = commands.substring(commands.indexOf(" ") + 1);
 
-                log.info("date=" + date + " time=" + time + " homeCommand=" + homeCommand + " awayCommand=" + awayCommand);
-                //log.info("LocalDate.parse(date,formatter).getDayOfMonth()="+LocalDate.parse(date,formatter).getDayOfMonth());
-                if (localDate.getDayOfMonth() == LocalDate.parse(date, formatter).getDayOfMonth()) {
-                    matches.add(new Match(new Command(homeCommand), new Command(awayCommand), time));
+                String data = tds.get(1).text().trim();
+                String commandNames = tds.get(2).html().trim();
+                if (data.equals("") || commandNames.equals("") || commandNames.contains("</span>")) {
+
+                    continue;
                 }
 
-            }
+                String date = data.substring(0, data.indexOf(" "));
+                String time = data.substring(data.indexOf(" ") + 1);
 
+                String homeCommand = commandNames.substring(commandNames.indexOf(">") + 1, commandNames.indexOf("<br>"));
+                String awayCommand = commandNames.substring(commandNames.indexOf("<br>") + 4, commandNames.indexOf("</a>"));
+
+                if (homeCommand.equals("") || awayCommand.equals("")) {
+                    continue;
+                }
+                if (homeCommand.contains("<small>")) {
+                    homeCommand = homeCommand.substring(homeCommand.indexOf("<small>") + "<small>".length(), homeCommand.indexOf("</small>"));
+                }
+                if (awayCommand.contains("<small>")) {
+                    awayCommand = awayCommand.substring(awayCommand.indexOf("<small>") + "<small>".length(), awayCommand.indexOf("</small>"));
+                }
+//                log.info("date=" + date + " time=" + time + " homeCommand=" + homeCommand + " awayCommand=" + awayCommand);
+                if (localDate.getDayOfMonth() == Integer.valueOf(data.substring(0, data.indexOf("/")))) {
+                    matches.add(new Match(new Command(homeCommand), new Command(awayCommand), time));
+                }
+                totalMatches++;
+            } catch (Exception e) {
+                continue;
+            }
         }
         log.info("total matches count=" + totalMatches);
         log.info("matches count=" + matches.size());

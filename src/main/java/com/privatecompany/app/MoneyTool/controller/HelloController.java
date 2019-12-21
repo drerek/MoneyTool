@@ -44,7 +44,7 @@ public class HelloController {
 
     @GetMapping("/stat")
     public ResponseEntity stat(){
-               statisticService.collectAllMatchesLiveResult("https://www.live-result.com/football/England/Premier-League/2017-2018/results/", "england.txt");
+       statisticService.collectAllMatchesLiveResult("https://www.live-result.com/football/England/Premier-League/2017-2018/results/", "england.txt");
        statisticService.collectAllMatchesLiveResult("https://www.live-result.com/football/Spain/Primera-division/2017-2018/results/", "spain.txt");
        statisticService.collectAllMatchesLiveResult("https://www.live-result.com/football/Germany/Bundesliga-I/2017-2018/results/", "germany.txt");
        statisticService.collectAllMatchesLiveResult("https://www.live-result.com/football/Italy/Serie-A/2017-2018/results/", "italy.txt");
@@ -69,9 +69,15 @@ public class HelloController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @GetMapping("/parimatch")
-    public ResponseEntity parimatch(){
-        lineMatchService.getMatchesPariMatch("https://www.parimatch.com/en/sport/futbol/");
+    @GetMapping("/parimatch/football")
+    public ResponseEntity parimatchFootball(){
+        lineMatchService.getMatchesPariMatch("https://www.parimatch.com/en/sport/futbol/", "Football");
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @GetMapping("/parimatch/hockey")
+    public ResponseEntity parimatcHockey(){
+        lineMatchService.getMatchesPariMatch("https://www.parimatch.com/en/sport/futbol/", "Hockey");
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
@@ -79,6 +85,24 @@ public class HelloController {
     public ResponseEntity flashscoreLine(){
         List matches = lineMatchService.getMatchesFlashScore("https://www.flashscore.com/");
         System.out.println(matches);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @GetMapping("/morning")
+    public ResponseEntity morning(){
+        analyzeService.sendMorning();
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @GetMapping("/day")
+    public ResponseEntity day(){
+        analyzeService.sendDay();
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @GetMapping("/night")
+    public ResponseEntity night(){
+        analyzeService.sendNight();
         return new ResponseEntity<>(HttpStatus.OK);
     }
 }
